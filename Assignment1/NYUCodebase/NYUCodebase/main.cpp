@@ -52,13 +52,14 @@ int main(int argc, char *argv[])
 
 	Matrix projectionMatrix;
 	Matrix modelMatrix;
-	modelMatrix.Translate(-2, -1, 0);
+	modelMatrix.Translate(-2.5, -1, 0);
 	Matrix modelMatrix2;
-	modelMatrix2.Translate(-2, 0, 0);
+	modelMatrix2.Translate(-2.5, 0, 0);
 	Matrix modelMatrix3;
 	Matrix modelMatrix4;
-	modelMatrix4.Translate(2, 1, 0);
+	modelMatrix4.Translate(2.5, 1, 0);
 	Matrix viewMatrix;
+	Matrix viewMatrix2;
 
 	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
 
@@ -118,7 +119,7 @@ int main(int argc, char *argv[])
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		program.SetModelMatrix(modelMatrix4);
-		expand ? modelMatrix4.Scale(2, 2, 1) : modelMatrix4.Scale(0.5, 0.5, 1);
+		expand ? modelMatrix4.Scale(1.5, 1.5, 1) : modelMatrix4.Scale(2.0/3.0, 2.0/3.0, 1);
 		expand = !expand;
 		LoadTexture(RESOURCE_FOLDER"dank.png");
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -130,11 +131,14 @@ int main(int argc, char *argv[])
 		untexturedProgram.SetColor(1, 0, 0, 1);
 		untexturedProgram.SetModelMatrix(modelMatrix3);
 		untexturedProgram.SetProjectionMatrix(projectionMatrix);
-		untexturedProgram.SetViewMatrix(viewMatrix);
+		untexturedProgram.SetViewMatrix(viewMatrix2);
 
-		glVertexAttribPointer(untexturedProgram.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+		viewMatrix2.Rotate(elapsed);
+
+		float vertices2[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -2.0, 0.0, -0.5, -0.5, 0.5, 0.5, 0.0, 2.0, -0.5, 0.5, 0.5, -0.5, 2.0, 0.0, 0.5, 0.5, 0.5, -0.5, 0.0, -2.0, -0.5, -0.5 };
+		glVertexAttribPointer(untexturedProgram.positionAttribute, 2, GL_FLOAT, false, 0, vertices2);
 		glEnableVertexAttribArray(untexturedProgram.positionAttribute);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLES, 0, 18);
 		glDisableVertexAttribArray(untexturedProgram.positionAttribute);
 
 		SDL_GL_SwapWindow(displayWindow);
