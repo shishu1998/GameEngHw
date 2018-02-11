@@ -52,12 +52,14 @@ int main(int argc, char *argv[])
 
 	Matrix projectionMatrix;
 	Matrix modelMatrix;
-	modelMatrix.Translate(-2.5, -1, 0);
+	modelMatrix.Translate(-2.5, -1.5, 0);
 	Matrix modelMatrix2;
-	modelMatrix2.Translate(-2.5, 0, 0);
+	modelMatrix2.Translate(-2.5, -0.5, 0);
 	Matrix modelMatrix3;
+	modelMatrix3.Scale(0.25, 0.25, 1);
 	Matrix modelMatrix4;
-	modelMatrix4.Translate(2.5, 1, 0);
+	modelMatrix4.Translate(2.5, 1.5, 0);
+	Matrix modelMatrix5;
 	Matrix viewMatrix;
 	Matrix viewMatrix2;
 
@@ -88,29 +90,45 @@ int main(int argc, char *argv[])
 		float elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
 
-		program.SetModelMatrix(modelMatrix);
-		LoadTexture(RESOURCE_FOLDER"metallic_pipimi.png");
+
+		program.SetModelMatrix(modelMatrix5);
+		LoadTexture(RESOURCE_FOLDER"backgrounds.png");
 		program.SetProjectionMatrix(projectionMatrix);
 		program.SetViewMatrix(viewMatrix);
-
-		float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
-		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+		
+		//Draws the background over the entire screen
+		float bgvertices[] = { -3.55, -2.0, 3.55, -2.0, 3.55, 2.0, -3.55, -2.0, 3.55, 2.0, -3.55, 2.0 };
+		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, bgvertices);
 		glEnableVertexAttribArray(program.positionAttribute);
 
 		float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
 		glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
 		glEnableVertexAttribArray(program.texCoordAttribute);
 
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		//converts the vertices back to regular polygon
+		glDisableVertexAttribArray(program.positionAttribute);
+		float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
+		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+		glEnableVertexAttribArray(program.positionAttribute);
+		
+		//Loads and draws Pipimi
+		program.SetModelMatrix(modelMatrix);
+		LoadTexture(RESOURCE_FOLDER"MetallicPipimi.png");
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
+		//Loads and draws climbing Popuko
 		program.SetModelMatrix(modelMatrix2);
 		LoadTexture(RESOURCE_FOLDER"PopukoClimb.png");
 		moveTime += elapsed;
+		//Check every tenth of a second
 		if (moveTime > 0.1) {
 			moveTime = 0.0f;
 			move += moveDown ? -1 : 1;
 			modelMatrix2.Translate(0, moveDown ? -0.01 : 0.01, 0);
+			//Only move each direction 100 times max
 			if (move >= 100 || move <= 0) {
 				moveDown = !moveDown;
 			}
@@ -118,8 +136,10 @@ int main(int argc, char *argv[])
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
+		//Loads and draws dank
 		program.SetModelMatrix(modelMatrix4);
 		expand ? modelMatrix4.Scale(1.5, 1.5, 1) : modelMatrix4.Scale(2.0/3.0, 2.0/3.0, 1);
+		//Expand/Shrink every other frame
 		expand = !expand;
 		LoadTexture(RESOURCE_FOLDER"dank.png");
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -127,6 +147,7 @@ int main(int argc, char *argv[])
 		glDisableVertexAttribArray(program.positionAttribute);
 		glDisableVertexAttribArray(program.texCoordAttribute);
 		
+		//Draws the untextured Shuriken
 		glUseProgram(untexturedProgram.programID);
 		untexturedProgram.SetColor(1, 0, 0, 1);
 		untexturedProgram.SetModelMatrix(modelMatrix3);

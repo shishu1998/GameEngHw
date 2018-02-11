@@ -1,4 +1,7 @@
 ﻿  main.cpp
-c:\repos\gameenghw\assignment1\nyucodebase\nyucodebase\main.cpp(63): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\repos\gameenghw\assignment1\nyucodebase\nyucodebase\main.cpp(112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\repos\gameenghw\assignment1\nyucodebase\nyucodebase\main.cpp(66): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\repos\gameenghw\assignment1\nyucodebase\nyucodebase\main.cpp(100): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+c:\repos\gameenghw\assignment1\nyucodebase\nyucodebase\main.cpp(100): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\repos\gameenghw\assignment1\nyucodebase\nyucodebase\main.cpp(130): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\repos\gameenghw\assignment1\nyucodebase\nyucodebase\main.cpp(141): warning C4305: 'argument': truncation from 'double' to 'float'
   NYUCodebase.vcxproj -> C:\Repos\GameEngHw\Assignment1\NYUCodebase\Debug\NYUCodebase.exe
