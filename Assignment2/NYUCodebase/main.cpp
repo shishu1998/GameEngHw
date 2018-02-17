@@ -16,8 +16,8 @@
 
 SDL_Window* displayWindow;
 bool done = false;
-int p1Y = 0;
-int p2Y = 0;
+float p1Y = 0;
+float p2Y = 0;
 
 void setup() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -38,16 +38,16 @@ void ProcessEvents() {
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_W:
-					p1Y = 1;
+					p1Y = 0.001;
 					break;
 				case SDL_SCANCODE_S:
-					p1Y = -1;
+					p1Y = -0.001;
 					break;
 				case SDL_SCANCODE_UP:
-					p2Y = 1;
+					p2Y = 0.001;
 					break;
 				case SDL_SCANCODE_DOWN:
-					p2Y = -1;
+					p2Y = -0.001;
 					break;
 				default:
 					break;
@@ -77,8 +77,23 @@ int main(int argc, char *argv[])
 	Board p2(3.525, 0, 0.05, 1);
 	ShaderProgram Program;
 	Program.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
+	float lastFrameTicks = 0.0f;
+	float elapsed = 0.0f;
 	while (!done) {
-		ProcessEvents();
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		float ticks = (float)SDL_GetTicks() / 1000.0f;
+		elapsed += ticks - lastFrameTicks;
+		lastFrameTicks = ticks;
+
+		if (elapsed > 0.1) {
+			ProcessEvents();
+			elapsed = 0.0f;
+		}
+
+		p1.y += p1Y;
+		p2.y += p2Y;
+
 		Program.SetColor(1, 0, 0, 1);
 		p1.Draw(Program);
 		Program.SetColor(0, 1, 0, 1);
