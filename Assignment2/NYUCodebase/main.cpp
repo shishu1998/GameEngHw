@@ -23,6 +23,7 @@ Entity p2(3.525f, 0.0f, 0.05f, 1.0f);
 Entity pong(0, 0, 0.1, 0.1);
 float lastFrameTicks = 0.0f;
 float elapsed = 0.0f;
+int winner = 0;
 
 void setup() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -94,15 +95,15 @@ void TimedEvents() {
 }
 
 void PongMovement() {
-	if ((pong.velY > 0 && pong.y + pong.height / 2 < 2.0) || (pong.velY < 0 && pong.y - pong.height / 2 > -2.0))
-		pong.Move();
-	else {
+	if (!((pong.velY > 0 && pong.y + pong.height / 2 < 2.0) || (pong.velY < 0 && pong.y - pong.height / 2 > -2.0)))
 		pong.velY *= -1.0f;
-	}
 
 	if (pong.Collision(p1) || pong.Collision(p2)) {
 		pong.velX *= -1.0f;
 	}
+	if (pong.x - pong.width > 3.55f) winner = 1;
+	if (pong.x + pong.width < -3.55f) winner = 2;
+	pong.Move();
 }
 
 int main(int argc, char *argv[])
@@ -111,18 +112,20 @@ int main(int argc, char *argv[])
 	ShaderProgram Program;
 	Program.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
 	while (!done) {
-		glClear(GL_COLOR_BUFFER_BIT);
+		while (!winner) {
+			glClear(GL_COLOR_BUFFER_BIT);
 
-		TimedEvents();
-		Program.SetColor(1, 0, 0, 1);
-		p1.Draw(Program);
-		Program.SetColor(0, 1, 0, 1);
-		p2.Draw(Program);
-		Program.SetColor(1, 1, 1, 1);
-		PongMovement();
-		pong.Draw(Program);
+			TimedEvents();
+			Program.SetColor(1, 0, 0, 1);
+			p1.Draw(Program);
+			Program.SetColor(0, 1, 0, 1);
+			p2.Draw(Program);
+			Program.SetColor(1, 1, 1, 1);
+			PongMovement();
+			pong.Draw(Program);
 
-		SDL_GL_SwapWindow(displayWindow);
+			SDL_GL_SwapWindow(displayWindow);
+		}
 	}
 
 	SDL_Quit();
