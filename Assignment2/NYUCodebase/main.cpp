@@ -17,6 +17,7 @@
 
 SDL_Window* displayWindow;
 bool done = false;
+ShaderProgram Program;
 Entity p1(-3.525f, 0.0f, 0.05f, 1.0f);
 Entity p2(3.525f, 0.0f, 0.05f, 1.0f);
 Entity pong(0, 0, 0.1, 0.1);
@@ -33,6 +34,8 @@ void setup() {
 		glewInit();
 	#endif
 
+	Program.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
+	
 	srand(SDL_GetTicks());
 	float angle = rand();
 	//makes sure we get a decent x velocity
@@ -111,24 +114,25 @@ void PongMovement() {
 	pong.Move();
 }
 
+void DrawEntities(ShaderProgram &Program) {
+	Program.SetColor(1, 0, 0, 1);
+	p1.Draw(Program);
+	Program.SetColor(0, 1, 0, 1);
+	p2.Draw(Program);
+	Program.SetColor(1, 1, 1, 1);
+	PongMovement();
+	pong.Draw(Program);
+}
+
 int main(int argc, char *argv[])
 {
 	setup();
-	ShaderProgram Program;
-	Program.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
 	while (!done) {
 		while (!winner) {
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			TimedEvents();
-			Program.SetColor(1, 0, 0, 1);
-			p1.Draw(Program);
-			Program.SetColor(0, 1, 0, 1);
-			p2.Draw(Program);
-			Program.SetColor(1, 1, 1, 1);
-			PongMovement();
-			pong.Draw(Program);
-
+			DrawEntities(Program);
 			SDL_GL_SwapWindow(displayWindow);
 		}
 		done = true;
