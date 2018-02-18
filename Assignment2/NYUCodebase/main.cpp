@@ -4,7 +4,6 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
-#include <stdlib.h>
 #include <math.h>
 #include "ShaderProgram.h"
 #include "Matrix.h"
@@ -33,9 +32,15 @@ void setup() {
 	#ifdef _WINDOWS
 		glewInit();
 	#endif
-	
-	pong.velX = 0.001f;
-	pong.velY = 0.005f;
+
+	srand(SDL_GetTicks());
+	float angle = rand();
+	//makes sure we get a decent x velocity
+	while (angle * cos(angle) < 0.0025f) {
+		angle = rand();
+	}
+	pong.velX = 0.005f * sin(angle);
+	pong.velY = 0.005f * cos(angle);
 }
 
 void ProcessEvents() {
@@ -47,16 +52,16 @@ void ProcessEvents() {
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_W:
-					p1.velY = 0.005f;
+					p1.velY = 0.01f;
 					break;
 				case SDL_SCANCODE_S:
-					p1.velY = -0.005f;
+					p1.velY = -0.01f;
 					break;
 				case SDL_SCANCODE_UP:
-					p2.velY = 0.005f;
+					p2.velY = 0.01f;
 					break;
 				case SDL_SCANCODE_DOWN:
-					p2.velY = -0.005f;
+					p2.velY = -0.01f;
 					break;
 				default:
 					break;
@@ -97,9 +102,9 @@ void TimedEvents() {
 void PongMovement() {
 	if (!((pong.velY > 0 && pong.y + pong.height / 2 < 2.0) || (pong.velY < 0 && pong.y - pong.height / 2 > -2.0)))
 		pong.velY *= -1.0f;
-
+	//Gets faster every time it hits a board
 	if (pong.Collision(p1) || pong.Collision(p2)) {
-		pong.velX *= -1.0f;
+		pong.velX *= -1.1f;
 	}
 	if (pong.x - pong.width > 3.55f) winner = 1;
 	if (pong.x + pong.width < -3.55f) winner = 2;
@@ -126,6 +131,7 @@ int main(int argc, char *argv[])
 
 			SDL_GL_SwapWindow(displayWindow);
 		}
+		done = true;
 	}
 
 	SDL_Quit();
