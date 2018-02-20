@@ -52,6 +52,7 @@ void ProcessEvents() {
 		if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
 			done = true;
 		}
+		//Checks for keyboard events
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_W:
@@ -92,6 +93,7 @@ void TimedEvents() {
 	elapsed += ticks - lastFrameTicks;
 	lastFrameTicks = ticks;
 
+	//Ensures frames change every 0.005 seconds
 	if (elapsed > 0.005) {
 		ProcessEvents();
 		if ((p1.velY > 0 && p1.y + p1.height / 2 < 2.0) || (p1.velY < 0 && p1.y - p1.height / 2 > -2.0))
@@ -114,6 +116,7 @@ void PongMovement() {
 	pong.Move();
 }
 
+// Draws the paddles and the pong
 void DrawEntities(ShaderProgram &Program) {
 	Program.SetColor(1, 0, 0, 1);
 	p1.Draw(Program);
