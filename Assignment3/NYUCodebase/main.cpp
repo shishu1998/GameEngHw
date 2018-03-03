@@ -19,6 +19,7 @@ SDL_Window* displayWindow;
 ShaderProgram program;
 enum GameState { Start, Game, Victory, Defeat};
 GameState state;
+const Uint8 *keys = SDL_GetKeyboardState(nullptr);
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -43,14 +44,24 @@ void renderState() {
 	switch (state) {
 	case Start:
 		DrawMessage(program, "PRESS SPACE", "TO START");
+		if (keys[SDL_SCANCODE_SPACE]) {
+			state = Game;
+		}
 		break;
 	case Game:
+		DrawMessage(program, "LET'S PLAY", "");
 		break;
 	case Victory:
 		DrawMessage(program, "YOU WIN - PRESS SPACE", "TO REPLAY THE GAME");
+		if (keys[SDL_SCANCODE_SPACE]) {
+			state = Game;
+		}
 		break;
 	case Defeat:
 		DrawMessage(program, "YOU LOSE - PRESS SPACE", "TO REPLAY THE GAME");
+		if (keys[SDL_SCANCODE_SPACE]) {
+			state = Game;
+		}
 		break;
 	}
 }

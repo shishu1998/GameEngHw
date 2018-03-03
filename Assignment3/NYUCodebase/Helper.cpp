@@ -1,5 +1,7 @@
 #include "Helper.h"
 #include <assert.h>
+
+// Loads Textures and return the Texture ID
 GLuint LoadTexture(const char *filePath) {
 	int w, h, comp;
 	unsigned char* image = stbi_load(filePath, &w, &h, &comp, STBI_rgb_alpha);
@@ -17,6 +19,7 @@ GLuint LoadTexture(const char *filePath) {
 	return retTexture;
 }
 
+// Text drawing
 void DrawText(ShaderProgram *program, int fontTexture, std::string text, float size, float spacing) {
 	float texture_size = 1.0 / 16.0f;
 	std::vector<float> vertexData;
@@ -55,6 +58,7 @@ void DrawText(ShaderProgram *program, int fontTexture, std::string text, float s
 	glDisableVertexAttribArray(program->texCoordAttribute);
 }
 
+// Draws messages on two rows
 void DrawMessage(ShaderProgram& program, std::string upper, std::string lower) {
 	Matrix modelMatrix;
 	Matrix viewMatrix;
