@@ -54,3 +54,26 @@ void DrawText(ShaderProgram *program, int fontTexture, std::string text, float s
 	glDisableVertexAttribArray(program->positionAttribute);
 	glDisableVertexAttribArray(program->texCoordAttribute);
 }
+
+void DrawMessage(ShaderProgram& program, std::string upper, std::string lower) {
+	Matrix modelMatrix;
+	Matrix viewMatrix;
+	Matrix projectionMatrix;
+	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
+
+	float size = 0.3f;
+	float space = 0.0f;
+	//centering
+	modelMatrix.Translate(-(size + space) * upper.size() / 2, 0.5, 0);
+
+	program.SetModelMatrix(modelMatrix);
+	program.SetProjectionMatrix(projectionMatrix);
+	program.SetViewMatrix(viewMatrix);
+	int TextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
+	DrawText(&program, TextureID, upper, size, space);
+
+	Matrix modelMatrix2;
+	modelMatrix2.Translate(-(size + space) * lower.size() / 2, -0.5, 0);
+	program.SetModelMatrix(modelMatrix2);
+	DrawText(&program, TextureID, lower, size, space);
+}

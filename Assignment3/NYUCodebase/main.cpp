@@ -18,6 +18,7 @@
 SDL_Window* displayWindow;
 ShaderProgram program;
 enum GameState { Start, Game, Victory, Defeat};
+GameState state;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -29,32 +30,29 @@ void init() {
 #endif
 
 	glViewport(0, 0, 960, 540);
+	state = Start;
 	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 }
 
-void DrawStart() {
-	Matrix modelMatrix;
-	Matrix viewMatrix;
-	Matrix projectionMatrix;
-	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
+void renderState() {
+	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	std::string text = "PRESS SPACE";
-	float size = 0.3f;
-	float space = 0.0f;
-	//centering
-	modelMatrix.Translate(-(size + space) * text.size() / 2, 0.5, 0);
-
-	program.SetModelMatrix(modelMatrix);
-	program.SetProjectionMatrix(projectionMatrix);
-	program.SetViewMatrix(viewMatrix);
-	int TextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
-	DrawText(&program, TextureID, text, size, space);
-
-	text = "TO START";
-	Matrix modelMatrix2;
-	modelMatrix2.Translate(-(size + space) * text.size() / 2, -0.5, 0);
-	program.SetModelMatrix(modelMatrix2);
-	DrawText(&program, TextureID, text, size, space);
+	glUseProgram(program.programID);
+	switch (state) {
+	case Start:
+		DrawMessage(program, "PRESS SPACE", "TO START");
+		break;
+	case Game:
+		break;
+	case Victory:
+		DrawMessage(program, "YOU WIN - PRESS SPACE", "TO REPLAY THE GAME");
+		break;
+	case Defeat:
+		DrawMessage(program, "YOU LOSE - PRESS SPACE", "TO REPLAY THE GAME");
+		break;
+	}
 }
 
 int main(int argc, char *argv[])
@@ -69,13 +67,7 @@ int main(int argc, char *argv[])
 				done = true;
 			}
 		}
-		glClear(GL_COLOR_BUFFER_BIT);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glUseProgram(program.programID);
-
-		DrawStart();
+		renderState();
 
 		SDL_GL_SwapWindow(displayWindow);
 	}
