@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {}
+Entity::Entity(float x, float y, float width, float height, EntityType type, SheetSprite sprite) : x(x), y(y), width(width), height(height), type(type), sprite(sprite) {}
 
 void Entity::Draw(ShaderProgram & Program)
 {

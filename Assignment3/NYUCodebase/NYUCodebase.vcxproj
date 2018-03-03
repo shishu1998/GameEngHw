@@ -81,12 +81,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="SheetSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="SheetSprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />

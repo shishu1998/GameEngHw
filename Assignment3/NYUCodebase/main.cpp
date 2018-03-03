@@ -8,6 +8,7 @@
 #include "Helper.h"
 #include "Matrix.h"
 #include "Entity.h"
+#include "SheetSprite.h"
 
 #ifdef _WINDOWS
 	#define RESOURCE_FOLDER ""
@@ -35,6 +36,15 @@ void init() {
 	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 }
 
+void renderGame() {
+
+}
+
+// Normalize the coordinates of the sprite sheet and create a sheetsp
+SheetSprite& createSheetSprite(unsigned int textureID, float x, float y, float width, float height, float size) {
+	return SheetSprite(textureID, x / 1024, y / 1024, width / 1024, height / 1024, size);
+}
+
 void renderState() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_BLEND);
@@ -49,7 +59,7 @@ void renderState() {
 		}
 		break;
 	case Game:
-		DrawMessage(program, "LET'S PLAY", "");
+		renderGame();
 		break;
 	case Victory:
 		DrawMessage(program, "YOU WIN - PRESS SPACE", "TO REPLAY THE GAME");
@@ -79,7 +89,6 @@ int main(int argc, char *argv[])
 			}
 		}
 		renderState();
-
 		SDL_GL_SwapWindow(displayWindow);
 	}
 
