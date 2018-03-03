@@ -39,7 +39,7 @@ void init() {
 #endif
 
 	glViewport(0, 0, 960, 540);
-	state = Defeat;
+	state = Start;
 	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 	TextureID = LoadTexture(RESOURCE_FOLDER"sheet.png");
 	fontTextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
@@ -47,7 +47,7 @@ void init() {
 	enemyShip = createSheetSprite(TextureID, 423, 728, 93, 84, 0.25);
 	player = Entity(0.0f, -1.5f, Player, playerShip);
 	for (int i = 0; i < 3; ++i) {
-		playerLives.emplace_back(-1.5f + i * 0.3f, -1.85f, Life, playerShip);
+		playerLives.emplace_back(-2.0f + i * 0.3f, -1.85f, Life, playerShip);
 	}
 }
 
@@ -69,6 +69,7 @@ void renderGame() {
 	player.Move(elapsed);
 	Entity enemy = Entity(0.0f, 1.0f, Enemy, enemyShip);
 	player.Draw(program);
+	DrawMessage(program, fontTextureID, "LIVES:", -3.4, -1.85, 0.2, 0.0);
 	for (int i = 0; i < playerLives.size(); ++i) {
 		playerLives[i].Draw(program);
 	}
