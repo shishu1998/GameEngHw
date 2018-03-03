@@ -4,6 +4,7 @@ SheetSprite::SheetSprite(unsigned int textureID, float u, float v, float width, 
 
 void SheetSprite::Draw(ShaderProgram * program)
 {
+	glUseProgram(program->programID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	GLfloat texCoords[] = {
 		u, v + height,

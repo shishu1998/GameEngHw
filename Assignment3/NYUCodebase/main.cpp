@@ -21,6 +21,9 @@ ShaderProgram program;
 enum GameState { Start, Game, Victory, Defeat};
 GameState state;
 const Uint8 *keys = SDL_GetKeyboardState(nullptr);
+float lastFrameTicks = 0.0f;
+float elapsed = 0.0f;
+int TextureID = LoadTexture(RESOURCE_FOLDER"sheet.png");
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -36,13 +39,35 @@ void init() {
 	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 }
 
-void renderGame() {
-
-}
-
 // Normalize the coordinates of the sprite sheet and create a sheetsp
 SheetSprite& createSheetSprite(unsigned int textureID, float x, float y, float width, float height, float size) {
 	return SheetSprite(textureID, x / 1024, y / 1024, width / 1024, height / 1024, size);
+}
+
+void renderGame() {
+	float ticks = (float)SDL_GetTicks() / 1000.0f;
+	elapsed += ticks - lastFrameTicks;
+	lastFrameTicks = ticks;
+
+	int TextureID = LoadTexture(RESOURCE_FOLDER"sheet.png");
+	SheetSprite playerShip = createSheetSprite(TextureID, 224, 832, 99, 75, 0.25);
+	SheetSprite enemyShip = createSheetSprite(TextureID, 423, 728, 93, 84, 0.25);
+	Entity player = Entity(0.0f, -1.5f, Player, playerShip);
+
+	if (keys[SDL_SCANCODE_LEFT]) {
+		player.velocity_x = -0.1f;
+	}
+	else if (keys[SDL_SCANCODE_RIGHT]) {
+		player.velocity_x = 0.1f;
+	}
+	else {
+		player.velocity_x = 0.0f;
+	}
+
+	player.Move(elapsed);
+	Entity enemy = Entity(0.0f, 1.0f, Enemy, enemyShip);
+	player.Draw(program);
+	enemy.Draw(program);
 }
 
 void renderState() {

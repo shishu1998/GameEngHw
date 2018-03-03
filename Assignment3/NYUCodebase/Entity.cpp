@@ -1,11 +1,12 @@
 #include "Entity.h"
 
-Entity::Entity(float x, float y, float width, float height, EntityType type, SheetSprite sprite) : x(x), y(y), width(width), height(height), type(type), sprite(sprite) {}
+Entity::Entity(float x, float y, EntityType type, SheetSprite sprite) : x(x), y(y), 
+width(sprite.width * sprite.size/ sprite.height), height(sprite.size), type(type), sprite(sprite) {
+	type == Player ? health = 3 : health = 1;
+}
 
 void Entity::Draw(ShaderProgram & Program)
 {
-	glUseProgram(Program.programID);
-
 	Matrix modelMatrix;
 	Matrix projectionMatrix;
 	Matrix viewMatrix;
@@ -17,11 +18,7 @@ void Entity::Draw(ShaderProgram & Program)
 	Program.SetProjectionMatrix(projectionMatrix);
 	Program.SetViewMatrix(viewMatrix);
 
-	float vertices[] = { -width / 2, -height / 2, width / 2, -height / 2, width / 2, height / 2, -width / 2, -height / 2, width / 2, height / 2, -width / 2, height / 2 };
-	glVertexAttribPointer(Program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-	glEnableVertexAttribArray(Program.positionAttribute);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glDisableVertexAttribArray(Program.positionAttribute);
+	sprite.Draw(&Program);
 }
 
 bool Entity::CollidesWith(const Entity & Other) const
@@ -29,8 +26,8 @@ bool Entity::CollidesWith(const Entity & Other) const
 	return !(y - height / 2 > Other.y + Other.height / 2 || y + height / 2 < Other.y - Other.height / 2 || x - width / 2 > Other.x + Other.width / 2 || x + width / 2 < Other.x - Other.width / 2);
 }
 
-void Entity::Move()
+void Entity::Move(float elapsed)
 {
-	x += velocity_x;
-	y += velocity_y;
+	x += elapsed * velocity_x;
+	y += elapsed * velocity_y;
 }

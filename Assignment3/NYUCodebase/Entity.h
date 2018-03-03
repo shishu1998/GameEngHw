@@ -6,18 +6,19 @@
 enum EntityType {Player, Enemy, Bullet};
 class Entity {
 public:
-	Entity(float x, float y, float width, float height, EntityType type, SheetSprite sprite);
+	Entity(float x, float y, EntityType type, SheetSprite sprite);
 	void Draw(ShaderProgram &Program);
 	bool CollidesWith(const Entity& Other) const;
-	void Move();
+	void Move(float elapsed);
 	float x;
 	float y;
 	float rotation;
 	int textureID;
 	float width;
 	float height;
-	float velocity_x;
-	float velocity_y;
+	float velocity_x = 0.0f;
+	float velocity_y = 0.0f;
+	int health;
 	EntityType type;
 	SheetSprite sprite;
 };
