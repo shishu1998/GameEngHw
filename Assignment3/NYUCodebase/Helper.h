@@ -8,9 +8,11 @@
 #define RESOURCE_FOLDER "NYUCodebase.app/Contents/Resources/"
 #endif
 #include "ShaderProgram.h"
+#include "SheetSprite.h"
 #include "stb_image.h"
 #include <vector>
 
 GLuint LoadTexture(const char *filePath);
 void DrawText(ShaderProgram *program, int fontTexture, std::string text, float size, float spacing);
-void DrawMessage(ShaderProgram& program, std::string upper, std::string lower);
+void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float x, float y, float size, float space);
+SheetSprite& createSheetSprite(unsigned int textureID, float x, float y, float width, float height, float size);

@@ -59,25 +59,20 @@ void DrawText(ShaderProgram *program, int fontTexture, std::string text, float s
 }
 
 // Draws messages on two rows
-void DrawMessage(ShaderProgram& program, std::string upper, std::string lower) {
+void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float x, float y, float size, float space) {
 	Matrix modelMatrix;
 	Matrix viewMatrix;
 	Matrix projectionMatrix;
+	modelMatrix.Translate(x,y,0);
 	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
-
-	float size = 0.3f;
-	float space = 0.0f;
-	//centering
-	modelMatrix.Translate(-(size + space) * upper.size() / 2, 0.5, 0);
 
 	program.SetModelMatrix(modelMatrix);
 	program.SetProjectionMatrix(projectionMatrix);
 	program.SetViewMatrix(viewMatrix);
-	int TextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
-	DrawText(&program, TextureID, upper, size, space);
+	DrawText(&program, TextureID, text, size, space);
+}
 
-	Matrix modelMatrix2;
-	modelMatrix2.Translate(-(size + space) * lower.size() / 2, -0.5, 0);
-	program.SetModelMatrix(modelMatrix2);
-	DrawText(&program, TextureID, lower, size, space);
+// Normalize the coordinates of the sprite sheet and create a sheetsprite
+SheetSprite& createSheetSprite(unsigned int textureID, float x, float y, float width, float height, float size) {
+	return SheetSprite(textureID, x / 1024, y / 1024, width / 1024, height / 1024, size);
 }

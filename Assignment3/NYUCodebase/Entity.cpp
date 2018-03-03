@@ -1,5 +1,6 @@
 #include "Entity.h"
 
+Entity::Entity() {}
 Entity::Entity(float x, float y, EntityType type, SheetSprite sprite) : x(x), y(y), 
 width(sprite.width * sprite.size/ sprite.height), height(sprite.size), type(type), sprite(sprite) {
 	type == Player ? health = 3 : health = 1;
@@ -7,18 +8,20 @@ width(sprite.width * sprite.size/ sprite.height), height(sprite.size), type(type
 
 void Entity::Draw(ShaderProgram & Program)
 {
-	Matrix modelMatrix;
-	Matrix projectionMatrix;
-	Matrix viewMatrix;
+	if (health > 0) {
+		Matrix modelMatrix;
+		Matrix projectionMatrix;
+		Matrix viewMatrix;
 
-	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
-	modelMatrix.Translate(x, y, 0);
+		projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
+		modelMatrix.Translate(x, y, 0);
 
-	Program.SetModelMatrix(modelMatrix);
-	Program.SetProjectionMatrix(projectionMatrix);
-	Program.SetViewMatrix(viewMatrix);
+		Program.SetModelMatrix(modelMatrix);
+		Program.SetProjectionMatrix(projectionMatrix);
+		Program.SetViewMatrix(viewMatrix);
 
-	sprite.Draw(&Program);
+		sprite.Draw(&Program);
+	}
 }
 
 bool Entity::CollidesWith(const Entity & Other) const

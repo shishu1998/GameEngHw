@@ -3,9 +3,10 @@
 #include "helper.h"
 #include "SheetSprite.h"
 
-enum EntityType {Player, Enemy, Bullet};
+enum EntityType {Player, Enemy, Bullet, Life};
 class Entity {
 public:
+	Entity();
 	Entity(float x, float y, EntityType type, SheetSprite sprite);
 	void Draw(ShaderProgram &Program);
 	bool CollidesWith(const Entity& Other) const;
