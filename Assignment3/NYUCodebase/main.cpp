@@ -51,22 +51,28 @@ void init() {
 	}
 }
 
-void renderGame() {
-	float ticks = (float)SDL_GetTicks() / 1000.0f;
-	elapsed += ticks - lastFrameTicks;
-	lastFrameTicks = ticks;
-
+void processGameState() {
 	if (keys[SDL_SCANCODE_LEFT]) {
-		player.velocity_x = -0.0005f;
+		player.velocity_x = -1.0f;
 	}
 	else if (keys[SDL_SCANCODE_RIGHT]) {
-		player.velocity_x = 0.0005f;
+		player.velocity_x = 1.0f;
 	}
 	else {
 		player.velocity_x = 0.0f;
 	}
+}
 
+void updateGameState(float elapsed) {
 	player.Move(elapsed);
+}
+
+void renderGame() {
+	float ticks = (float)SDL_GetTicks() / 1000.0f;
+	float elapsed = ticks - lastFrameTicks;
+	lastFrameTicks = ticks;
+	processGameState();
+	updateGameState(elapsed);
 	Entity enemy = Entity(0.0f, 1.0f, Enemy, enemyShip);
 	player.Draw(program);
 	DrawMessage(program, fontTextureID, "LIVES:", -3.4, -1.85, 0.2, 0.0);
