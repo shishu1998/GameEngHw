@@ -6,6 +6,7 @@
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 #include <math.h>
+#include <algorithm>
 #include "Helper.h"
 #include "Matrix.h"
 #include "Entity.h"
@@ -30,8 +31,10 @@ SheetSprite enemyBullet;
 Entity player;
 std::vector<Entity> playerLives;
 std::vector<std::vector<Entity>> enemies;
+std::vector<Entity> bullets;
 float lastFrameTicks = 0.0f;
 float elapsed = 0.0f;
+float bulletCooldown = 1.0f;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -63,11 +66,22 @@ void init() {
 
 	for (int i = 0; i < 3; ++i) {
 		enemies.emplace_back(std::vector<Entity>());
-		for (int j = 0; j < 20; ++j) {
-			Entity enemy = Entity(-shipWidth/2 * 20 + j * shipWidth, 1.8 - i * enemyShip.size, Enemy, enemyShip);
+		for (int j = 0; j < 8; ++j) {
+			Entity enemy = Entity(-shipWidth * 8 + j * shipWidth * 2, 1.8 - i * enemyShip.size * 2, Enemy, enemyShip);
 			enemies.back().push_back(enemy);
 		}
 	}
+}
+
+void shootBullet(Entity& entity) {
+	Entity bullet = Entity(entity.x, entity.y + entity.height, Bullet, entity.type == Player ? playerBullet : enemyBullet);
+	bullet.velocity_y = 1.0f;
+	entity.type == Player ? bullet.rotation = 0 : bullet.rotation = M_PI;
+	bullets.emplace_back(bullet);
+}
+
+bool shouldRemoveBullet(Entity bullet) {
+	return bullet.height / 2 + bullet.y > 2.0 || bullet.y - bullet.height / 2 < -1.85 || bullet.health < 1;
 }
 
 void processGameState() {
@@ -80,16 +94,26 @@ void processGameState() {
 	else {
 		player.velocity_x = 0.0f;
 	}
+
+	if (keys[SDL_SCANCODE_J] && bulletCooldown >= 1.0) {
+		shootBullet(player);
+		bulletCooldown = 0.0f;
+	}
 }
 
 void updateGameState(float elapsed) {
 	player.Move(elapsed);
+	for (int i = 0; i < bullets.size(); ++i) {
+		bullets[i].Move(elapsed);
+	}
+	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), shouldRemoveBullet), bullets.end());
 }
 
 void renderGame() {
 	float ticks = (float)SDL_GetTicks() / 1000.0f;
 	float elapsed = ticks - lastFrameTicks;
 	lastFrameTicks = ticks;
+	bulletCooldown += elapsed;
 	processGameState();
 	updateGameState(elapsed);
 	player.Draw(program);
@@ -101,6 +125,10 @@ void renderGame() {
 		for (int j = 0; j < enemies[i].size(); ++j) {
 			enemies[i][j].Draw(program);
 		}
+	}
+
+	for (int i = 0; i < bullets.size(); ++i) {
+		bullets[i].Draw(program);
 	}
 }
 
