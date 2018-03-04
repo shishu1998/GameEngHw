@@ -10,7 +10,9 @@ public:
 	Entity player;
 	std::vector<Entity> playerLives;
 	std::vector<std::vector<Entity>> enemies;
-	std::vector<Entity> bullets;
+	std::vector<Entity> playerBullets;
+	std::vector<Entity> enemyBullets;
+	int score = 0;
 	void initEntities();
 	void reset();
 	void shootBullet(Entity& entity);

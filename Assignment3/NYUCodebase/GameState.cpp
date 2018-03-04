@@ -29,8 +29,10 @@ void GameState::initEntities() {
 
 void GameState::reset() {
 	enemies.clear();
-	bullets.clear();
+	playerBullets.clear();
+	enemyBullets.clear();
 	initEntities();
+	score = 0;
 }
 
 void GameState::shootBullet(Entity& entity) {
@@ -38,12 +40,13 @@ void GameState::shootBullet(Entity& entity) {
 	if (entity.type == Player) {
 		bullet.velocity_y = 1.0f;
 		bullet.rotation = 0;
+		playerBullets.emplace_back(bullet);
 	}
 	else {
 		bullet.velocity_y = -1.0f;
 		bullet.rotation = M_PI;
+		enemyBullets.emplace_back(bullet);
 	}
-	bullets.emplace_back(bullet);
 }
 
 bool GameState::shouldRemoveBullet(Entity bullet) {
@@ -60,7 +63,7 @@ void GameState::updateGameState(float elapsed) {
 		for (int i = 0; i < enemies.size(); ++i) {
 			for (int j = 0; j < enemies[i].size(); ++j) {
 				enemies[i][j].velocity_x *= -1;
-				enemies[i][j].y -= 0.5f;
+				enemies[i][j].y -= 0.25f;
 			}
 		}
 	}
@@ -69,26 +72,43 @@ void GameState::updateGameState(float elapsed) {
 			enemies[i][j].Move(elapsed);
 		}
 	}
-	for (int i = 0; i < bullets.size(); ++i) {
-		bullets[i].Move(elapsed);
+	for (int i = 0; i < playerBullets.size(); ++i) {
+		playerBullets[i].Move(elapsed);
+		//Bullet to bullet collision
+		for (int l = 0; l < enemyBullets.size(); ++l) {
+			if (playerBullets[i].CollidesWith(enemyBullets[l])) {
+				playerBullets[i].health -= 1;
+				enemyBullets[l].health -= 1;
+			}
+		}
+		//PlayerBullet to Enemy collision
 		for (int j = 0; j < enemies.size(); ++j) {
 			for (int k = 0; k < enemies[j].size(); ++k) {
-				if (bullets[i].CollidesWith(enemies[j][k])) {
+				if (playerBullets[i].CollidesWith(enemies[j][k])) {
 					enemies[j][k].health -= 1;
-					bullets[i].health -= 1;
+					playerBullets[i].health -= 1;
+					score += 100;
 				}
 			}
 		}
-		if (bullets[i].CollidesWith(player)) {
-			bullets[i].health -= 1;
+	}
+	//EnemyBullet to player collision
+	for (int i = 0; i < enemyBullets.size(); ++i) {
+		enemyBullets[i].Move(elapsed);
+		if (enemyBullets[i].CollidesWith(player)) {
+			enemyBullets[i].health -= 1;
 			player.health -= 1;
 			playerLives.pop_back();
+			score -= 500;
 		}
 	}
-	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), &GameState::shouldRemoveBullet), bullets.end());
+
+	playerBullets.erase(std::remove_if(playerBullets.begin(), playerBullets.end(), &GameState::shouldRemoveBullet), playerBullets.end());
+	enemyBullets.erase(std::remove_if(enemyBullets.begin(), enemyBullets.end(), &GameState::shouldRemoveBullet), enemyBullets.end());
 	for (int i = 0; i < enemies.size(); ++i) {
 		enemies[i].erase(std::remove_if(enemies[i].begin(), enemies[i].end(), &GameState::shouldRemoveEnemy), enemies[i].end());
 	}
+	//If a column of enemies died, move every column to the right over
 	for (int i = 0; i < enemies.size(); ++i) {
 		if (enemies[i].empty()) {
 			for (int j = i; j < enemies.size() - 1; ++j) {

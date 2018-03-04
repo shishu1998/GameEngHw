@@ -84,6 +84,7 @@ void renderGame() {
 	for (int i = 0; i < state.playerLives.size(); ++i) {
 		state.playerLives[i].Draw(program);
 	}
+	DrawMessage(program, fontTextureID, "SCORE:" + std::to_string(state.score), 1.0, -1.85, 0.2, 0.0);
 	for (int i = 0; i < state.enemies.size(); ++i) {
 		for (int j = 0; j < state.enemies[i].size(); ++j) {
 			state.enemies[i][j].Draw(program);
@@ -97,8 +98,11 @@ void renderGame() {
 		enemyBulletCooldown = 0.0f;
 	}
 
-	for (int i = 0; i < state.bullets.size(); ++i) {
-		state.bullets[i].Draw(program);
+	for (int i = 0; i < state.playerBullets.size(); ++i) {
+		state.playerBullets[i].Draw(program);
+	}
+	for (int i = 0; i < state.enemyBullets.size(); ++i) {
+		state.enemyBullets[i].Draw(program);
 	}
 	if (state.player.health < 1) {
 		mode = Defeat;
@@ -133,16 +137,16 @@ void renderState() {
 		renderGame();
 		break;
 	case Victory:
-		DrawMessage(program, fontTextureID, "YOU WIN - PRESS SPACE", -0.3 * 21 / 2.0, 0.5, 0.3f, 0.0f);
-		DrawMessage(program, fontTextureID, "TO REPLAY THE GAME", -0.3 * 18 / 2.0, -0.5, 0.3f, 0.0f);
+		DrawMessage(program, fontTextureID, "YOU WIN, YOUR SCORE:" + std::to_string(state.score), -0.2 * (20 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
+		DrawMessage(program, fontTextureID, "PRESS SPACE TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
 		if (keys[SDL_SCANCODE_SPACE]) {
 			reset();
 			mode = Start;
 		}
 		break;
 	case Defeat:
-		DrawMessage(program, fontTextureID, "YOU LOSE - PRESS SPACE", -0.3 * 22 / 2.0, 0.5, 0.3f, 0.0f);
-		DrawMessage(program, fontTextureID, "TO REPLAY THE GAME", -0.3 * 18 / 2.0, -0.5, 0.3f, 0.0f);
+		DrawMessage(program, fontTextureID, "YOU LOSE, YOUR SCORE:" + std::to_string(state.score), -0.2 * (21 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
+		DrawMessage(program, fontTextureID, "PRESS SPACE TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
 		if (keys[SDL_SCANCODE_SPACE]) {
 			reset();
 			mode = Start;
