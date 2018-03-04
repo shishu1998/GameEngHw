@@ -15,6 +15,7 @@ void Entity::Draw(ShaderProgram & Program)
 
 		projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
 		modelMatrix.Translate(x, y, 0);
+		modelMatrix.Rotate(rotation);
 
 		Program.SetModelMatrix(modelMatrix);
 		Program.SetProjectionMatrix(projectionMatrix);

@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
+#include <math.h>
 #include "Helper.h"
 #include "Matrix.h"
 #include "Entity.h"
@@ -24,6 +25,8 @@ int TextureID;
 int fontTextureID;
 SheetSprite playerShip;
 SheetSprite enemyShip;
+SheetSprite playerBullet;
+SheetSprite enemyBullet;
 Entity player;
 std::vector<Entity> playerLives;
 std::vector<std::vector<Entity>> enemies;
@@ -41,16 +44,23 @@ void init() {
 
 	glViewport(0, 0, 960, 540);
 	state = Start;
+
 	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 	TextureID = LoadTexture(RESOURCE_FOLDER"sheet.png");
 	fontTextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
+
 	playerShip = createSheetSprite(TextureID, 224, 832, 99, 75, 0.25);
 	enemyShip = createSheetSprite(TextureID, 423, 728, 93, 84, 0.25);
+	playerBullet = createSheetSprite(TextureID, 856, 421, 9, 54, 0.25);
+	enemyBullet = createSheetSprite(TextureID, 858, 230, 9, 54, 0.25);
+
 	float shipWidth = enemyShip.width * enemyShip.size / enemyShip.height;
 	player = Entity(0.0f - shipWidth/2, -1.5f, Player, playerShip);
+	
 	for (int i = 0; i < 3; ++i) {
 		playerLives.emplace_back(-2.0f + i * 0.3f, -1.85f, Life, playerShip);
 	}
+
 	for (int i = 0; i < 3; ++i) {
 		enemies.emplace_back(std::vector<Entity>());
 		for (int j = 0; j < 20; ++j) {

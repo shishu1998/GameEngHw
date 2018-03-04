@@ -13,7 +13,7 @@ public:
 	void Move(float elapsed);
 	float x;
 	float y;
-	float rotation;
+	float rotation = 0;
 	int textureID;
 	float width;
 	float height;
