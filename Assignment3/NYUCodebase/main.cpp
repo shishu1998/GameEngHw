@@ -58,7 +58,7 @@ void initEntities() {
 		enemies.emplace_back(std::vector<Entity>());
 		for (int j = 0; j < 3; ++j) {
 			Entity enemy = Entity(-shipWidth * 8 + i * shipWidth * 2, 1.8 - j * enemyShip.size * 2, Enemy, enemyShip);
-			enemy.velocity_x = 1.0f;
+			enemy.velocity_x = 0.5f;
 			enemies.back().push_back(enemy);
 		}
 	}
@@ -125,19 +125,26 @@ void processGameState() {
 
 void updateGameState(float elapsed) {
 	player.Move(elapsed);
-	/*
+	if (enemies[0][0].x - enemies[0][0].width / 2 < -3.55 || enemies.back()[0].x + enemies.back()[0].width / 2 > 3.55) {
+		for (int i = 0; i < enemies.size(); ++i) {
+			for (int j = 0; j < enemies[i].size(); ++j) {
+				enemies[i][j].velocity_x *= -1;
+			}
+		}
+	}
 	for (int i = 0; i < enemies.size(); ++i) {
 		for (int j = 0; j < enemies[i].size(); ++j) {
 			enemies[i][j].Move(elapsed);
 		}
 	}
-	*/
 	for (int i = 0; i < bullets.size(); ++i) {
 		bullets[i].Move(elapsed);
 		for (int j = 0; j < enemies.size(); ++j) {
-			if (!enemies[j].empty() && bullets[i].CollidesWith(enemies[j].back())) {
-				enemies[j].back().health -= 1;
-				bullets[i].health -= 1;
+			for (int k = 0; k < enemies[j].size(); ++k) {
+				if (bullets[i].CollidesWith(enemies[j][k])) {
+					enemies[j][k].health -= 1;
+					bullets[i].health -= 1;
+				}
 			}
 		}
 		if (bullets[i].CollidesWith(player)) {
@@ -148,6 +155,9 @@ void updateGameState(float elapsed) {
 	}
 	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), shouldRemoveBullet), bullets.end());
 	for (int i = 0; i < enemies.size(); ++i) {
+		enemies[i].erase(std::remove_if(enemies[i].begin(), enemies[i].end(), shouldRemoveEnemy), enemies[i].end());
+	}
+	for (int i = 0; i < enemies.size(); ++i) {
 		if (enemies[i].empty()) {
 			for (int j = i; j < enemies.size() - 1; ++j) {
 				enemies[j] = enemies[j + 1];
@@ -157,9 +167,6 @@ void updateGameState(float elapsed) {
 			}
 			enemies.pop_back();
 		}
-	}
-	for (int i = 0; i < enemies.size(); ++i) {
-		enemies[i].erase(std::remove_if(enemies[i].begin(), enemies[i].end(), shouldRemoveEnemy), enemies[i].end());
 	}
 }
 
