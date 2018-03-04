@@ -37,6 +37,32 @@ float elapsed = 0.0f;
 float bulletCooldown = 1.0f;
 float enemyBulletCooldown = 0.0f;
 
+void initEntities() {
+	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+	TextureID = LoadTexture(RESOURCE_FOLDER"sheet.png");
+	fontTextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
+
+	playerShip = createSheetSprite(TextureID, 224, 832, 99, 75, 0.25);
+	enemyShip = createSheetSprite(TextureID, 423, 728, 93, 84, 0.25);
+	playerBullet = createSheetSprite(TextureID, 856, 421, 9, 54, 0.25);
+	enemyBullet = createSheetSprite(TextureID, 858, 230, 9, 54, 0.25);
+
+	float shipWidth = enemyShip.width * enemyShip.size / enemyShip.height;
+	player = Entity(0.0f - shipWidth / 2, -1.5f, Player, playerShip);
+
+	for (int i = 0; i < 3; ++i) {
+		playerLives.emplace_back(-2.0f + i * 0.3f, -1.85f, Life, playerShip);
+	}
+
+	for (int i = 0; i < 8; ++i) {
+		enemies.emplace_back(std::vector<Entity>());
+		for (int j = 0; j < 3; ++j) {
+			Entity enemy = Entity(-shipWidth * 8 + i * shipWidth * 2, 1.8 - j * enemyShip.size * 2, Enemy, enemyShip);
+			enemies.back().push_back(enemy);
+		}
+	}
+}
+
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
 	displayWindow = SDL_CreateWindow("My Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 960, 540, SDL_WINDOW_OPENGL);
@@ -49,29 +75,13 @@ void init() {
 	glViewport(0, 0, 960, 540);
 	state = Start;
 
-	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
-	TextureID = LoadTexture(RESOURCE_FOLDER"sheet.png");
-	fontTextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
+	initEntities();
+}
 
-	playerShip = createSheetSprite(TextureID, 224, 832, 99, 75, 0.25);
-	enemyShip = createSheetSprite(TextureID, 423, 728, 93, 84, 0.25);
-	playerBullet = createSheetSprite(TextureID, 856, 421, 9, 54, 0.25);
-	enemyBullet = createSheetSprite(TextureID, 858, 230, 9, 54, 0.25);
-
-	float shipWidth = enemyShip.width * enemyShip.size / enemyShip.height;
-	player = Entity(0.0f - shipWidth/2, -1.5f, Player, playerShip);
-	
-	for (int i = 0; i < 3; ++i) {
-		playerLives.emplace_back(-2.0f + i * 0.3f, -1.85f, Life, playerShip);
-	}
-
-	for (int i = 0; i < 8; ++i) {
-		enemies.emplace_back(std::vector<Entity>());
-		for (int j = 0; j < 3; ++j) {
-			Entity enemy = Entity(-shipWidth * 8 + i * shipWidth * 2, 1.8 - j * enemyShip.size * 2, Enemy, enemyShip);
-			enemies.back().push_back(enemy);
-		}
-	}
+void reset() {
+	initEntities();
+	bullets.clear();
+	state = Start;
 }
 
 void shootBullet(Entity& entity) {
@@ -126,6 +136,11 @@ void updateGameState(float elapsed) {
 				bullets[i].health -= 1;
 			}
 		}
+		if (bullets[i].CollidesWith(player)) {
+			bullets[i].health -= 1;
+			player.health -= 1;
+			playerLives.pop_back();
+		}
 	}
 	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), shouldRemoveBullet), bullets.end());
 	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), shouldRemoveEnemyColumn), enemies.end());
@@ -163,6 +178,13 @@ void renderGame() {
 	for (int i = 0; i < bullets.size(); ++i) {
 		bullets[i].Draw(program);
 	}
+	if (player.health < 1) {
+		state = Defeat;
+	}
+	if (enemies.empty()) {
+		state = Victory;
+	}
+
 }
 
 void renderState() {
@@ -195,7 +217,7 @@ void renderState() {
 		DrawMessage(program, fontTextureID, "YOU LOSE - PRESS SPACE", -0.3 * 22 / 2.0, 0.5, 0.3f, 0.0f);
 		DrawMessage(program, fontTextureID, "TO REPLAY THE GAME", -0.3 * 18 / 2.0, -0.5, 0.3f, 0.0f);
 		if (keys[SDL_SCANCODE_SPACE]) {
-			state = Game;
+			reset();
 		}
 		break;
 	}
