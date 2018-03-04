@@ -26,6 +26,7 @@ SheetSprite playerShip;
 SheetSprite enemyShip;
 Entity player;
 std::vector<Entity> playerLives;
+std::vector<std::vector<Entity>> enemies;
 float lastFrameTicks = 0.0f;
 float elapsed = 0.0f;
 
@@ -45,9 +46,17 @@ void init() {
 	fontTextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
 	playerShip = createSheetSprite(TextureID, 224, 832, 99, 75, 0.25);
 	enemyShip = createSheetSprite(TextureID, 423, 728, 93, 84, 0.25);
-	player = Entity(0.0f, -1.5f, Player, playerShip);
+	float shipWidth = enemyShip.width * enemyShip.size / enemyShip.height;
+	player = Entity(0.0f - shipWidth/2, -1.5f, Player, playerShip);
 	for (int i = 0; i < 3; ++i) {
 		playerLives.emplace_back(-2.0f + i * 0.3f, -1.85f, Life, playerShip);
+	}
+	for (int i = 0; i < 3; ++i) {
+		enemies.emplace_back(std::vector<Entity>());
+		for (int j = 0; j < 20; ++j) {
+			Entity enemy = Entity(-shipWidth/2 * 20 + j * shipWidth, 1.8 - i * enemyShip.size, Enemy, enemyShip);
+			enemies.back().push_back(enemy);
+		}
 	}
 }
 
@@ -73,13 +82,16 @@ void renderGame() {
 	lastFrameTicks = ticks;
 	processGameState();
 	updateGameState(elapsed);
-	Entity enemy = Entity(0.0f, 1.0f, Enemy, enemyShip);
 	player.Draw(program);
 	DrawMessage(program, fontTextureID, "LIVES:", -3.4, -1.85, 0.2, 0.0);
 	for (int i = 0; i < playerLives.size(); ++i) {
 		playerLives[i].Draw(program);
 	}
-	enemy.Draw(program);
+	for (int i = 0; i < enemies.size(); ++i) {
+		for (int j = 0; j < enemies[i].size(); ++j) {
+			enemies[i][j].Draw(program);
+		}
+	}
 }
 
 void renderState() {
