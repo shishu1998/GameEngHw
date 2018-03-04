@@ -92,7 +92,11 @@ bool shouldRemoveBullet(Entity bullet) {
 }
 
 bool shouldRemoveEnemyColumn(std::vector<Entity> enemies) {
-	return enemies.size() == 0;
+	return enemies.empty();
+}
+
+bool shouldRemoveEnemy(Entity enemy) {
+	return enemy.health < 1;
 }
 
 void processGameState() {
@@ -116,9 +120,18 @@ void updateGameState(float elapsed) {
 	player.Move(elapsed);
 	for (int i = 0; i < bullets.size(); ++i) {
 		bullets[i].Move(elapsed);
+		for (int j = 0; j < enemies.size(); ++j) {
+			if (bullets[i].CollidesWith(enemies[j].back())) {
+				enemies[j].back().health -= 1;
+				bullets[i].health -= 1;
+			}
+		}
 	}
 	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), shouldRemoveBullet), bullets.end());
 	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), shouldRemoveEnemyColumn), enemies.end());
+	for (int i = 0; i < enemies.size(); ++i) {
+		enemies[i].erase(std::remove_if(enemies[i].begin(), enemies[i].end(), shouldRemoveEnemy), enemies[i].end());
+	}
 }
 
 void renderGame() {
