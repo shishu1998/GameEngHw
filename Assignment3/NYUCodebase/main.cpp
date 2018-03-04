@@ -19,8 +19,8 @@
 
 SDL_Window* displayWindow;
 ShaderProgram program;
-enum GameState { Start, Game, Victory, Defeat};
-GameState state;
+enum GameMode { Start, Game, Victory, Defeat};
+GameMode mode;
 const Uint8 *keys = SDL_GetKeyboardState(nullptr);
 int TextureID;
 int fontTextureID;
@@ -74,15 +74,16 @@ void init() {
 #endif
 
 	glViewport(0, 0, 960, 540);
-	state = Start;
+	mode = Start;
 
 	initEntities();
 }
 
 void reset() {
-	initEntities();
+	enemies.clear();
 	bullets.clear();
-	state = Start;
+	initEntities();
+	mode = Start;
 }
 
 void shootBullet(Entity& entity) {
@@ -201,14 +202,14 @@ void renderGame() {
 		bullets[i].Draw(program);
 	}
 	if (player.health < 1) {
-		state = Defeat;
+		mode = Defeat;
 	}
 	if (enemies.empty()) {
-		state = Victory;
+		mode = Victory;
 	}
 	for (int i = 0; i < enemies.size(); ++i) {
-		if (enemies[i].back().y - enemies[i].back().height/2 < -1.85) {
-			state = Defeat;
+		if (enemies[i].back().y - enemies[i].back().height/2 < -1.75) {
+			mode = Defeat;
 		}
 	}
 }
@@ -219,14 +220,14 @@ void renderState() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glUseProgram(program.programID);
-	switch (state) {
+	switch (mode) {
 	case Start:
 		DrawMessage(program, fontTextureID, "PRESS SPACE TO START", -0.3 * 19/2.0, 0.5, 0.3f, 0.0f);
 		DrawMessage(program, fontTextureID, "INSTRUCTIONS", -0.2*12 /2.0, 0.0f, 0.2f, 0.0f);
 		DrawMessage(program, fontTextureID, "USE A AND D TO MOVE", -0.15 * 19/ 2.0, -0.2, 0.15f, 0.0f);
 		DrawMessage(program, fontTextureID, "USE J TO SHOOT", -0.15 * 14 / 2.0, -0.35, 0.15f, 0.0f);
 		if (keys[SDL_SCANCODE_SPACE]) {
-			state = Game;
+			mode = Game;
 		}
 		break;
 	case Game:
