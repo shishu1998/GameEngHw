@@ -35,6 +35,7 @@ std::vector<Entity> bullets;
 float lastFrameTicks = 0.0f;
 float elapsed = 0.0f;
 float bulletCooldown = 1.0f;
+float enemyBulletCooldown = 0.0f;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -64,24 +65,34 @@ void init() {
 		playerLives.emplace_back(-2.0f + i * 0.3f, -1.85f, Life, playerShip);
 	}
 
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 8; ++i) {
 		enemies.emplace_back(std::vector<Entity>());
-		for (int j = 0; j < 8; ++j) {
-			Entity enemy = Entity(-shipWidth * 8 + j * shipWidth * 2, 1.8 - i * enemyShip.size * 2, Enemy, enemyShip);
+		for (int j = 0; j < 3; ++j) {
+			Entity enemy = Entity(-shipWidth * 8 + i * shipWidth * 2, 1.8 - j * enemyShip.size * 2, Enemy, enemyShip);
 			enemies.back().push_back(enemy);
 		}
 	}
 }
 
 void shootBullet(Entity& entity) {
-	Entity bullet = Entity(entity.x, entity.y + entity.height, Bullet, entity.type == Player ? playerBullet : enemyBullet);
-	bullet.velocity_y = 1.0f;
-	entity.type == Player ? bullet.rotation = 0 : bullet.rotation = M_PI;
+	Entity bullet = Entity(entity.x, entity.type == Player ? entity.y + entity.height : entity.y - entity.height, Bullet, entity.type == Player ? playerBullet : enemyBullet);
+	if (entity.type == Player) {
+		bullet.velocity_y = 1.0f;
+		bullet.rotation = 0;
+	}
+	else {
+		bullet.velocity_y = -1.0f;
+		bullet.rotation = M_PI;
+	}
 	bullets.emplace_back(bullet);
 }
 
 bool shouldRemoveBullet(Entity bullet) {
 	return bullet.height / 2 + bullet.y > 2.0 || bullet.y - bullet.height / 2 < -1.85 || bullet.health < 1;
+}
+
+bool shouldRemoveEnemyColumn(std::vector<Entity> enemies) {
+	return enemies.size() == 0;
 }
 
 void processGameState() {
@@ -107,6 +118,7 @@ void updateGameState(float elapsed) {
 		bullets[i].Move(elapsed);
 	}
 	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), shouldRemoveBullet), bullets.end());
+	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), shouldRemoveEnemyColumn), enemies.end());
 }
 
 void renderGame() {
@@ -114,6 +126,7 @@ void renderGame() {
 	float elapsed = ticks - lastFrameTicks;
 	lastFrameTicks = ticks;
 	bulletCooldown += elapsed;
+	enemyBulletCooldown += elapsed;
 	processGameState();
 	updateGameState(elapsed);
 	player.Draw(program);
@@ -125,6 +138,13 @@ void renderGame() {
 		for (int j = 0; j < enemies[i].size(); ++j) {
 			enemies[i][j].Draw(program);
 		}
+	}
+
+	srand(SDL_GetTicks());
+	int randEnemyShoot = rand();
+	if (enemyBulletCooldown > 0.5f) {
+		shootBullet(enemies[randEnemyShoot%enemies.size()].back());
+		enemyBulletCooldown = 0.0f;
 	}
 
 	for (int i = 0; i < bullets.size(); ++i) {

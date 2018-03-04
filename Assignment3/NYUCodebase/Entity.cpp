@@ -32,6 +32,8 @@ bool Entity::CollidesWith(const Entity & Other) const
 
 void Entity::Move(float elapsed)
 {
-	x += elapsed * velocity_x;
+	if (velocity_x < 0 && x - width / 2 > -3.55 || velocity_x > 0 && x + width / 2 < 3.55) {
+		x += elapsed * velocity_x;
+	}
 	y += elapsed * velocity_y;
 }
