@@ -13,6 +13,7 @@ public:
 	std::vector<Entity> playerBullets;
 	std::vector<Entity> enemyBullets;
 	int score = 0;
+	void loadResources();
 	void initEntities();
 	void reset();
 	void shootBullet(Entity& entity);

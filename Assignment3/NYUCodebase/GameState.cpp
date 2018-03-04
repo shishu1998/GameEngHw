@@ -2,14 +2,15 @@
 #include <math.h>
 #include "GameState.h"
 #include <algorithm>
-void GameState::initEntities() {
-	TextureID = LoadTexture(RESOURCE_FOLDER"sheet.png");
 
+void GameState::loadResources() {
+	TextureID = LoadTexture(RESOURCE_FOLDER"sheet.png");
 	playerShip = createSheetSprite(TextureID, 224, 832, 99, 75, 0.25);
 	enemyShip = createSheetSprite(TextureID, 423, 728, 93, 84, 0.25);
 	playerBullet = createSheetSprite(TextureID, 856, 421, 9, 54, 0.25);
 	enemyBullet = createSheetSprite(TextureID, 858, 230, 9, 54, 0.25);
-
+}
+void GameState::initEntities() {
 	float shipWidth = enemyShip.width * enemyShip.size / enemyShip.height;
 	player = Entity(0.0f - shipWidth / 2, -1.5f, Player, playerShip);
 

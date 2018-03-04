@@ -51,6 +51,7 @@ void init() {
 	glViewport(0, 0, 960, 540);
 	mode = Start;
 
+	state.loadResources();
 	initEntities();
 }
 
