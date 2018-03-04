@@ -58,6 +58,7 @@ void initEntities() {
 		enemies.emplace_back(std::vector<Entity>());
 		for (int j = 0; j < 3; ++j) {
 			Entity enemy = Entity(-shipWidth * 8 + i * shipWidth * 2, 1.8 - j * enemyShip.size * 2, Enemy, enemyShip);
+			enemy.velocity_x = 1.0f;
 			enemies.back().push_back(enemy);
 		}
 	}
@@ -101,10 +102,6 @@ bool shouldRemoveBullet(Entity bullet) {
 	return bullet.height / 2 + bullet.y > 2.0 || bullet.y - bullet.height / 2 < -1.85 || bullet.health < 1;
 }
 
-bool shouldRemoveEnemyColumn(std::vector<Entity> enemies) {
-	return enemies.empty();
-}
-
 bool shouldRemoveEnemy(Entity enemy) {
 	return enemy.health < 1;
 }
@@ -128,10 +125,17 @@ void processGameState() {
 
 void updateGameState(float elapsed) {
 	player.Move(elapsed);
+	/*
+	for (int i = 0; i < enemies.size(); ++i) {
+		for (int j = 0; j < enemies[i].size(); ++j) {
+			enemies[i][j].Move(elapsed);
+		}
+	}
+	*/
 	for (int i = 0; i < bullets.size(); ++i) {
 		bullets[i].Move(elapsed);
 		for (int j = 0; j < enemies.size(); ++j) {
-			if (bullets[i].CollidesWith(enemies[j].back())) {
+			if (!enemies[j].empty() && bullets[i].CollidesWith(enemies[j].back())) {
 				enemies[j].back().health -= 1;
 				bullets[i].health -= 1;
 			}
@@ -143,7 +147,17 @@ void updateGameState(float elapsed) {
 		}
 	}
 	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), shouldRemoveBullet), bullets.end());
-	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), shouldRemoveEnemyColumn), enemies.end());
+	for (int i = 0; i < enemies.size(); ++i) {
+		if (enemies[i].empty()) {
+			for (int j = i; j < enemies.size() - 1; ++j) {
+				enemies[j] = enemies[j + 1];
+				for (int k = 0; k < enemies[j].size(); ++k) {
+					enemies[j][k].x -= 2 * enemies[j][k].width;
+				}
+			}
+			enemies.pop_back();
+		}
+	}
 	for (int i = 0; i < enemies.size(); ++i) {
 		enemies[i].erase(std::remove_if(enemies[i].begin(), enemies[i].end(), shouldRemoveEnemy), enemies[i].end());
 	}
@@ -170,7 +184,7 @@ void renderGame() {
 
 	srand(SDL_GetTicks());
 	int randEnemyShoot = rand();
-	if (enemyBulletCooldown > 0.5f) {
+	if (enemyBulletCooldown > 2.0f / enemies.size()) {
 		shootBullet(enemies[randEnemyShoot%enemies.size()].back());
 		enemyBulletCooldown = 0.0f;
 	}
@@ -210,7 +224,7 @@ void renderState() {
 		DrawMessage(program, fontTextureID, "YOU WIN - PRESS SPACE", -0.3 * 21 / 2.0, 0.5, 0.3f, 0.0f);
 		DrawMessage(program, fontTextureID, "TO REPLAY THE GAME", -0.3 * 18 / 2.0, -0.5, 0.3f, 0.0f);
 		if (keys[SDL_SCANCODE_SPACE]) {
-			state = Game;
+			reset();
 		}
 		break;
 	case Defeat:
