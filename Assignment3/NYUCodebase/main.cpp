@@ -61,10 +61,10 @@ void init() {
 }
 
 void processGameState() {
-	if (keys[SDL_SCANCODE_LEFT]) {
+	if (keys[SDL_SCANCODE_A]) {
 		player.velocity_x = -1.0f;
 	}
-	else if (keys[SDL_SCANCODE_RIGHT]) {
+	else if (keys[SDL_SCANCODE_D]) {
 		player.velocity_x = 1.0f;
 	}
 	else {
@@ -102,8 +102,10 @@ void renderState() {
 	glUseProgram(program.programID);
 	switch (state) {
 	case Start:
-		DrawMessage(program, fontTextureID, "PRESS SPACE", -0.3 * 11/2.0, 0.5, 0.3f, 0.0f);
-		DrawMessage(program, fontTextureID, "TO START", -0.3 * 8/2.0, -0.5, 0.3f, 0.0f);
+		DrawMessage(program, fontTextureID, "PRESS SPACE TO START", -0.3 * 19/2.0, 0.5, 0.3f, 0.0f);
+		DrawMessage(program, fontTextureID, "INSTRUCTIONS", -0.2*12 /2.0, 0.0f, 0.2f, 0.0f);
+		DrawMessage(program, fontTextureID, "USE A AND D TO MOVE", -0.15 * 19/ 2.0, -0.2, 0.15f, 0.0f);
+		DrawMessage(program, fontTextureID, "USE J TO SHOOT", -0.15 * 14 / 2.0, -0.35, 0.15f, 0.0f);
 		if (keys[SDL_SCANCODE_SPACE]) {
 			state = Game;
 		}
