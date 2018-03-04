@@ -129,6 +129,7 @@ void updateGameState(float elapsed) {
 		for (int i = 0; i < enemies.size(); ++i) {
 			for (int j = 0; j < enemies[i].size(); ++j) {
 				enemies[i][j].velocity_x *= -1;
+				enemies[i][j].y -= 0.5f;
 			}
 		}
 	}
@@ -205,7 +206,11 @@ void renderGame() {
 	if (enemies.empty()) {
 		state = Victory;
 	}
-
+	for (int i = 0; i < enemies.size(); ++i) {
+		if (enemies[i].back().y - enemies[i].back().height/2 < -1.85) {
+			state = Defeat;
+		}
+	}
 }
 
 void renderState() {
