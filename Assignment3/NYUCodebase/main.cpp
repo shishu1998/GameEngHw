@@ -139,16 +139,16 @@ void renderState() {
 		break;
 	case Victory:
 		DrawMessage(program, fontTextureID, "YOU WIN, YOUR SCORE:" + std::to_string(state.score), -0.2 * (20 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
-		DrawMessage(program, fontTextureID, "PRESS SPACE TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
-		if (keys[SDL_SCANCODE_SPACE]) {
+		DrawMessage(program, fontTextureID, "PRESS ENTER TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
+		if (keys[SDL_SCANCODE_RETURN]) {
 			reset();
 			mode = Start;
 		}
 		break;
 	case Defeat:
 		DrawMessage(program, fontTextureID, "YOU LOSE, YOUR SCORE:" + std::to_string(state.score), -0.2 * (21 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
-		DrawMessage(program, fontTextureID, "PRESS SPACE TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
-		if (keys[SDL_SCANCODE_SPACE]) {
+		DrawMessage(program, fontTextureID, "PRESS ENTER TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
+		if (keys[SDL_SCANCODE_RETURN]) {
 			reset();
 			mode = Start;
 		}

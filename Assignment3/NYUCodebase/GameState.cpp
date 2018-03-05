@@ -30,6 +30,7 @@ void GameState::initEntities() {
 
 void GameState::reset() {
 	enemies.clear();
+	playerLives.clear();
 	playerBullets.clear();
 	enemyBullets.clear();
 	initEntities();
@@ -39,12 +40,12 @@ void GameState::reset() {
 void GameState::shootBullet(Entity& entity) {
 	Entity bullet = Entity(entity.x, entity.type == Player ? entity.y + entity.height : entity.y - entity.height, Bullet, entity.type == Player ? playerBullet : enemyBullet);
 	if (entity.type == Player) {
-		bullet.velocity_y = 1.0f;
+		bullet.velocity_y = 2.0f;
 		bullet.rotation = 0;
 		playerBullets.emplace_back(bullet);
 	}
 	else {
-		bullet.velocity_y = -1.0f;
+		bullet.velocity_y = -2.0f;
 		bullet.rotation = M_PI;
 		enemyBullets.emplace_back(bullet);
 	}
