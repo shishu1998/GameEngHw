@@ -112,7 +112,7 @@ void renderGame(GameState& state) {
 		mode = Victory;
 	}
 	for (int i = 0; i < state.enemies.size(); ++i) {
-		if (state.enemies[i].back().y - state.enemies[i].back().height/2 < -1.75) {
+		if (state.enemies[i].back().y - state.enemies[i].back().height/2 < -1.50) {
 			mode = Defeat;
 		}
 	}
