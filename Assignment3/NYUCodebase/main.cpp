@@ -72,6 +72,10 @@ void processGameState(GameState& state) {
 	}
 }
 
+void updateGameState(GameState& state, float elapsed) {
+	state.updateGameState(elapsed);
+}
+
 void renderGame(GameState& state) {
 	float ticks = (float)SDL_GetTicks() / 1000.0f;
 	float elapsed = ticks - lastFrameTicks;
@@ -79,7 +83,7 @@ void renderGame(GameState& state) {
 	bulletCooldown += elapsed;
 	enemyBulletCooldown += elapsed;
 	processGameState(state);
-	state.updateGameState(elapsed);
+	updateGameState(state, elapsed);
 	state.player.Draw(program);
 	DrawMessage(program, fontTextureID, "LIVES:", -3.4, -1.85, 0.2, 0.0);
 	for (int i = 0; i < state.playerLives.size(); ++i) {
