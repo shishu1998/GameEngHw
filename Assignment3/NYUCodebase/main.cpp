@@ -34,7 +34,7 @@ void initEntities() {
 	state.initEntities();
 }
 
-void reset() {
+void reset(GameState& state) {
 	state.reset();
 }
 
@@ -55,7 +55,7 @@ void init() {
 	initEntities();
 }
 
-void processGameState() {
+void processGameState(GameState& state) {
 	if (keys[SDL_SCANCODE_A]) {
 		state.player.velocity_x = -1.0f;
 	}
@@ -72,13 +72,13 @@ void processGameState() {
 	}
 }
 
-void renderGame() {
+void renderGame(GameState& state) {
 	float ticks = (float)SDL_GetTicks() / 1000.0f;
 	float elapsed = ticks - lastFrameTicks;
 	lastFrameTicks = ticks;
 	bulletCooldown += elapsed;
 	enemyBulletCooldown += elapsed;
-	processGameState();
+	processGameState(state);
 	state.updateGameState(elapsed);
 	state.player.Draw(program);
 	DrawMessage(program, fontTextureID, "LIVES:", -3.4, -1.85, 0.2, 0.0);
@@ -118,7 +118,7 @@ void renderGame() {
 	}
 }
 
-void renderState() {
+void renderState(GameState& state) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -135,13 +135,13 @@ void renderState() {
 		}
 		break;
 	case Game:
-		renderGame();
+		renderGame(state);
 		break;
 	case Victory:
 		DrawMessage(program, fontTextureID, "YOU WIN, YOUR SCORE:" + std::to_string(state.score), -0.2 * (20 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
 		DrawMessage(program, fontTextureID, "PRESS ENTER TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
 		if (keys[SDL_SCANCODE_RETURN]) {
-			reset();
+			reset(state);
 			mode = Start;
 		}
 		break;
@@ -149,7 +149,7 @@ void renderState() {
 		DrawMessage(program, fontTextureID, "YOU LOSE, YOUR SCORE:" + std::to_string(state.score), -0.2 * (21 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
 		DrawMessage(program, fontTextureID, "PRESS ENTER TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
 		if (keys[SDL_SCANCODE_RETURN]) {
-			reset();
+			reset(state);
 			mode = Start;
 		}
 		break;
@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
 				done = true;
 			}
 		}
-		renderState();
+		renderState(state);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 

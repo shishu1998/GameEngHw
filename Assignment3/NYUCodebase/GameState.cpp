@@ -33,7 +33,20 @@ void GameState::reset() {
 	playerLives.clear();
 	playerBullets.clear();
 	enemyBullets.clear();
-	initEntities();
+	player.health = 3;
+
+	for (int i = 0; i < 3; ++i) {
+		playerLives.emplace_back(-2.0f + i * 0.3f, -1.85f, Life, playerShip);
+	}
+	float shipWidth = enemyShip.width * enemyShip.size / enemyShip.height;
+	for (int i = 0; i < 8; ++i) {
+		enemies.emplace_back(std::vector<Entity>());
+		for (int j = 0; j < 3; ++j) {
+			Entity enemy = Entity(-shipWidth * 8 + i * shipWidth * 2, 1.8 - j * enemyShip.size * 2, Enemy, enemyShip);
+			enemy.velocity_x = 0.5f;
+			enemies.back().push_back(enemy);
+		}
+	}
 	score = 0;
 }
 
