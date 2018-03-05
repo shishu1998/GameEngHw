@@ -58,7 +58,7 @@ void DrawText(ShaderProgram *program, int fontTexture, std::string text, float s
 	glDisableVertexAttribArray(program->texCoordAttribute);
 }
 
-// Draws messages on two rows
+// Draws messages on a given x,y coordinate
 void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float x, float y, float size, float space) {
 	Matrix modelMatrix;
 	Matrix viewMatrix;
