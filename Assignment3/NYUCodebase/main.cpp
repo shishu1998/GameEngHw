@@ -28,9 +28,8 @@ float elapsed = 0.0f;
 float bulletCooldown = 1.0f;
 float enemyBulletCooldown = 0.0f;
 
-void initEntities() {
-	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
-	fontTextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
+void initEntities(GameState& state) {
+	state.loadResources();
 	state.initEntities();
 }
 
@@ -51,8 +50,9 @@ void init() {
 	glViewport(0, 0, 960, 540);
 	mode = Start;
 
-	state.loadResources();
-	initEntities();
+	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+	fontTextureID = LoadTexture(RESOURCE_FOLDER"font1.png");
+	initEntities(state);
 }
 
 void processGameState(GameState& state) {
@@ -131,6 +131,7 @@ void renderState(GameState& state) {
 		DrawMessage(program, fontTextureID, "USE A AND D TO MOVE", -0.15 * 19/ 2.0, -0.2, 0.15f, 0.0f);
 		DrawMessage(program, fontTextureID, "USE J TO SHOOT", -0.15 * 14 / 2.0, -0.35, 0.15f, 0.0f);
 		if (keys[SDL_SCANCODE_SPACE]) {
+			reset(state);
 			mode = Game;
 		}
 		break;
@@ -141,7 +142,6 @@ void renderState(GameState& state) {
 		DrawMessage(program, fontTextureID, "YOU WIN, YOUR SCORE:" + std::to_string(state.score), -0.2 * (20 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
 		DrawMessage(program, fontTextureID, "PRESS ENTER TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
 		if (keys[SDL_SCANCODE_RETURN]) {
-			reset(state);
 			mode = Start;
 		}
 		break;
@@ -149,7 +149,6 @@ void renderState(GameState& state) {
 		DrawMessage(program, fontTextureID, "YOU LOSE, YOUR SCORE:" + std::to_string(state.score), -0.2 * (21 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
 		DrawMessage(program, fontTextureID, "PRESS ENTER TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
 		if (keys[SDL_SCANCODE_RETURN]) {
-			reset(state);
 			mode = Start;
 		}
 		break;

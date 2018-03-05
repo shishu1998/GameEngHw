@@ -14,6 +14,8 @@ public:
 	std::vector<Entity> enemyBullets;
 	int score = 0;
 	void loadResources();
+	void populateLives();
+	void populateEnemies();
 	void initEntities();
 	void reset();
 	void shootBullet(Entity& entity);
