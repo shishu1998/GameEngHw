@@ -85,7 +85,7 @@ void renderGame(GameState& state) {
 	processGameState(state);
 	updateGameState(state, elapsed);
 	state.player.Draw(program);
-	DrawMessage(program, fontTextureID, "LIVES:", -3.4, -1.85, 0.2, 0.0);
+	DrawMessage(program, fontTextureID, "LIVES:", -3.4f, -1.85f, 0.2f, 0.0f);
 	for (int i = 0; i < state.playerLives.size(); ++i) {
 		state.playerLives[i].Draw(program);
 	}
@@ -98,6 +98,7 @@ void renderGame(GameState& state) {
 
 	srand(SDL_GetTicks());
 	int randEnemyShoot = rand();
+	//Rate of bullets for enemies gets less the more columns you eliminate
 	if (enemyBulletCooldown > 2.0f / state.enemies.size()) {
 		state.shootBullet(state.enemies[randEnemyShoot%state.enemies.size()].back());
 		enemyBulletCooldown = 0.0f;
@@ -130,10 +131,10 @@ void renderState(GameState& state) {
 	glUseProgram(program.programID);
 	switch (mode) {
 	case Start:
-		DrawMessage(program, fontTextureID, "PRESS SPACE TO START", -0.3 * 19/2.0, 0.5, 0.3f, 0.0f);
-		DrawMessage(program, fontTextureID, "INSTRUCTIONS", -0.2*12 /2.0, 0.0f, 0.2f, 0.0f);
-		DrawMessage(program, fontTextureID, "USE A AND D TO MOVE", -0.15 * 19/ 2.0, -0.2, 0.15f, 0.0f);
-		DrawMessage(program, fontTextureID, "USE J TO SHOOT", -0.15 * 14 / 2.0, -0.35, 0.15f, 0.0f);
+		DrawMessage(program, fontTextureID, "PRESS SPACE TO START", -0.3f * 19/2.0, 0.5f, 0.3f, 0.0f);
+		DrawMessage(program, fontTextureID, "INSTRUCTIONS", -0.2f*12 /2.0, 0.0f, 0.2f, 0.0f);
+		DrawMessage(program, fontTextureID, "USE A AND D TO MOVE", -0.15f * 19/ 2.0, -0.2, 0.15f, 0.0f);
+		DrawMessage(program, fontTextureID, "USE J TO SHOOT", -0.15f * 14 / 2.0, -0.35, 0.15f, 0.0f);
 		if (keys[SDL_SCANCODE_SPACE]) {
 			reset(state);
 			mode = Game;
@@ -145,14 +146,14 @@ void renderState(GameState& state) {
 	case Victory:
 		DrawMessage(program, fontTextureID, "YOU WIN, YOUR SCORE:" + std::to_string(state.score), -0.2 * (20 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
 		DrawMessage(program, fontTextureID, "PRESS ENTER TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
-		if (keys[SDL_SCANCODE_RETURN]) {
+		if (keys[SDL_SCANCODE_RETURN] || keys[SDL_SCANCODE_KP_ENTER]) {
 			mode = Start;
 		}
 		break;
 	case Defeat:
 		DrawMessage(program, fontTextureID, "YOU LOSE, YOUR SCORE:" + std::to_string(state.score), -0.2 * (21 + std::to_string(state.score).size()) / 2.0, 0.5, 0.2f, 0.0f);
 		DrawMessage(program, fontTextureID, "PRESS ENTER TO REPLAY THE GAME", -0.2 * 30 / 2.0, -0.5, 0.2f, 0.0f);
-		if (keys[SDL_SCANCODE_RETURN]) {
+		if (keys[SDL_SCANCODE_RETURN] || keys[SDL_SCANCODE_KP_ENTER]) {
 			mode = Start;
 		}
 		break;
