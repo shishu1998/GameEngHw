@@ -1,39 +1,39 @@
 #include "Entity.h"
 
 Entity::Entity() {}
-Entity::Entity(float x, float y, EntityType type, SheetSprite sprite) : x(x), y(y), 
-width(sprite.width * sprite.size/ sprite.height), height(sprite.size), type(type), sprite(sprite) {
-	type == Player ? health = 3 : health = 1;
+Entity::Entity(float x, float y, EntityType type, SheetSprite sprite) : Position(x,y,0), 
+size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), entityType(type), sprite(sprite) {
 }
 
-void Entity::Draw(ShaderProgram & Program)
+void Entity::Render(ShaderProgram & Program)
 {
-	if (health > 0) {
-		Matrix modelMatrix;
-		Matrix projectionMatrix;
-		Matrix viewMatrix;
+	Matrix modelMatrix;
+	Matrix projectionMatrix;
+	Matrix viewMatrix;
 
-		projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
-		modelMatrix.Translate(x, y, 0);
-		modelMatrix.Rotate(rotation);
+	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
+	modelMatrix.Translate(Position.x, Position.y, 0);
 
-		Program.SetModelMatrix(modelMatrix);
-		Program.SetProjectionMatrix(projectionMatrix);
-		Program.SetViewMatrix(viewMatrix);
+	Program.SetModelMatrix(modelMatrix);
+	Program.SetProjectionMatrix(projectionMatrix);
+	Program.SetViewMatrix(viewMatrix);
 
-		sprite.Draw(&Program);
-	}
+	sprite.Draw(&Program);
 }
 
 bool Entity::CollidesWith(const Entity & Other) const
 {
-	return !(y - height / 2 > Other.y + Other.height / 2 || y + height / 2 < Other.y - Other.height / 2 || x - width / 2 > Other.x + Other.width / 2 || x + width / 2 < Other.x - Other.width / 2);
+	return !(Position.y - size.y / 2 > Other.Position.y + Other.size.y / 2 || Position.y + size.y / 2 < Other.Position.y - Other.size.y / 2 || Position.x - size.x / 2 > Other.Position.x + Other.size.x / 2 || Position.x + size.x / 2 < Other.Position.x - Other.size.x / 2);
 }
 
-void Entity::Move(float elapsed)
+void Entity::Update(float elapsed)
 {
-	if (velocity_x < 0 && x - width / 2 > -3.55 || velocity_x > 0 && x + width / 2 < 3.55) {
-		x += elapsed * velocity_x;
-	}
-	y += elapsed * velocity_y;
+	velocity.x = lerp(velocity.x, 0.0f, elapsed * acceleration.x);
+	velocity.y = lerp(velocity.y, 0.0f, elapsed * acceleration.y);
+	velocity.x += acceleration.x * elapsed;
+	velocity.y += acceleration.y * elapsed;
+	Position.y += velocity.y * elapsed;
+	//collisionY();
+	Position.x += velocity.x * elapsed;
+	//collisionX();
 }

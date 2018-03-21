@@ -2,24 +2,29 @@
 #include "ShaderProgram.h"
 #include "helper.h"
 #include "SheetSprite.h"
+#include "Vector3.h"
 
 enum EntityType {Player, Enemy, Bullet, Life};
 class Entity {
 public:
 	Entity();
 	Entity(float x, float y, EntityType type, SheetSprite sprite);
-	void Draw(ShaderProgram &Program);
+	void Render(ShaderProgram &Program);
 	bool CollidesWith(const Entity& Other) const;
-	void Move(float elapsed);
-	float x;
-	float y;
-	float rotation = 0;
-	int textureID;
-	float width;
-	float height;
-	float velocity_x = 0.0f;
-	float velocity_y = 0.0f;
-	int health;
-	EntityType type;
+	void Update(float elapsed);
+
 	SheetSprite sprite;
+
+	Vector3 Position;
+	Vector3 size;
+	Vector3 velocity;
+	Vector3 acceleration;
+
+	bool isStatic;
+	EntityType entityType;
+	
+	bool collidedTop;
+	bool collidedBottom;
+	bool collidedLeft;
+	bool collidedRight;
 };

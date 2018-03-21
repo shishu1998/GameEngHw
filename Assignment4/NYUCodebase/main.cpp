@@ -13,6 +13,8 @@
 #else
 	#define RESOURCE_FOLDER "NYUCodebase.app/Contents/Resources/"
 #endif
+#define FIXED_TIMESTEP 0.0166666f
+#define MAX_TIMESTEPS 6
 
 SDL_Window* displayWindow;
 ShaderProgram program;
@@ -20,6 +22,7 @@ const Uint8 *keys = SDL_GetKeyboardState(nullptr);
 int fontTextureID;
 float lastFrameTicks = 0.0f;
 float elapsed = 0.0f;
+float accumulator = 0.0f;
 
 void initEntities(GameState& state) {
 }
@@ -38,6 +41,7 @@ void init() {
 #endif
 
 	glViewport(0, 0, 960, 540);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 }
 
 void processGameState(GameState& state) {
@@ -56,9 +60,6 @@ void updateGameState(GameState& state, float elapsed) {
 void renderGame(GameState& state) {
 }
 
-void renderState(GameState& state) {
-}
-
 int main(int argc, char *argv[])
 {
 	init();
@@ -70,6 +71,21 @@ int main(int argc, char *argv[])
 				done = true;
 			}
 		}
+		float ticks = (float)SDL_GetTicks() / 1000.0f;
+		elapsed = ticks - lastFrameTicks;
+		lastFrameTicks = ticks;
+
+		elapsed += accumulator;
+		if (elapsed < FIXED_TIMESTEP) {
+			accumulator = elapsed;
+			continue;
+		}
+		while (elapsed >= FIXED_TIMESTEP) {
+			//updateGameState(state,FIXED_TIMESTEP);
+			elapsed -= FIXED_TIMESTEP;
+		}
+		accumulator = elapsed;
+		glClear(GL_COLOR_BUFFER_BIT);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 

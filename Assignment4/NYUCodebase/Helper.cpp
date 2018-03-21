@@ -76,3 +76,8 @@ void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float 
 SheetSprite& createSheetSprite(unsigned int textureID, float x, float y, float width, float height, float size) {
 	return SheetSprite(textureID, x / 1024, y / 1024, width / 1024, height / 1024, size);
 }
+
+float lerp(float v0, float v1, float t)
+{
+	return (1.0 - t)*v0 + t * v1;
+}
