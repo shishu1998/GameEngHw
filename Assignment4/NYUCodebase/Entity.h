@@ -10,7 +10,7 @@ public:
 	Entity();
 	Entity(float x, float y, EntityType type, SheetSprite sprite);
 	void Render(ShaderProgram &Program);
-	bool CollidesWith(const Entity& Other) const;
+	bool CollidesWith(const Entity& Other);
 	void Update(float elapsed);
 
 	SheetSprite sprite;
@@ -23,8 +23,8 @@ public:
 	bool isStatic;
 	EntityType entityType;
 	
-	bool collidedTop;
-	bool collidedBottom;
-	bool collidedLeft;
-	bool collidedRight;
+	bool collidedTop = false;
+	bool collidedBottom = false;
+	bool collidedLeft = false;
+	bool collidedRight = false;
 };

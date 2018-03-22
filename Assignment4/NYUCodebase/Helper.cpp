@@ -1,5 +1,7 @@
 #include "Helper.h"
 #include <assert.h>
+#define SPRITESHEET_WIDTH 256
+#define SPRITESHEET_HEIGHT 128
 
 // Loads Textures and return the Texture ID
 GLuint LoadTexture(const char *filePath) {
@@ -74,7 +76,7 @@ void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float 
 
 // Normalize the coordinates of the sprite sheet and create a sheetsprite
 SheetSprite& createSheetSprite(unsigned int textureID, float x, float y, float width, float height, float size) {
-	return SheetSprite(textureID, x / 1024, y / 1024, width / 1024, height / 1024, size);
+	return SheetSprite(textureID, x / SPRITESHEET_WIDTH, y / SPRITESHEET_HEIGHT, width / SPRITESHEET_WIDTH, height / SPRITESHEET_HEIGHT, size);
 }
 
 float lerp(float v0, float v1, float t)

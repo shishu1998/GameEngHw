@@ -21,7 +21,7 @@ void Entity::Render(ShaderProgram & Program)
 	sprite.Draw(&Program);
 }
 
-bool Entity::CollidesWith(const Entity & Other) const
+bool Entity::CollidesWith(const Entity& Other)
 {
 	return !(Position.y - size.y / 2 > Other.Position.y + Other.size.y / 2 || Position.y + size.y / 2 < Other.Position.y - Other.size.y / 2 || Position.x - size.x / 2 > Other.Position.x + Other.size.x / 2 || Position.x + size.x / 2 < Other.Position.x - Other.size.x / 2);
 }
@@ -36,4 +36,5 @@ void Entity::Update(float elapsed)
 	//collisionY();
 	Position.x += velocity.x * elapsed;
 	//collisionX();
+	collidedLeft = collidedRight = collidedTop = collidedBottom = false;
 }

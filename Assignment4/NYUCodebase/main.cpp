@@ -23,6 +23,7 @@ int fontTextureID;
 float lastFrameTicks = 0.0f;
 float elapsed = 0.0f;
 float accumulator = 0.0f;
+GameState state;
 
 void initEntities(GameState& state) {
 }
@@ -42,6 +43,7 @@ void init() {
 
 	glViewport(0, 0, 960, 540);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
+	state.loadResources();
 }
 
 void processGameState(GameState& state) {
@@ -60,12 +62,18 @@ void updateGameState(GameState& state, float elapsed) {
 void renderGame(GameState& state) {
 }
 
+
+void PlaceEntity(std::string type, float x, float y) {
+	
+}
+
 int main(int argc, char *argv[])
 {
 	init();
 	SDL_Event event;
 	bool done = false;
 	while (!done) {
+		glClear(GL_COLOR_BUFFER_BIT);
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
 				done = true;
@@ -85,7 +93,6 @@ int main(int argc, char *argv[])
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;
-		glClear(GL_COLOR_BUFFER_BIT);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 

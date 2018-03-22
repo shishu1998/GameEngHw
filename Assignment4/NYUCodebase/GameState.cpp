@@ -1,8 +1,10 @@
 #define _USE_MATH_DEFINES
 #include "GameState.h"
+#define levelFILE "Arne.txt"
 
-//Loads the textureID and sprites for the entities
+//Loads the required resources for the entities
 void GameState::loadResources() {
+	map.Load(levelFILE);
 }
 
 //Initializes the Entities stored in the state
@@ -15,4 +17,8 @@ void GameState::reset() {
 
 //Updates the GameState based on the time elapsed
 void GameState::updateGameState(float elapsed) {
+}
+
+void GameState::PlaceEntity(std::string type, float x, float y)
+{
 }
