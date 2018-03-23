@@ -41,7 +41,11 @@ void init() {
 	glewInit();
 #endif
 
+	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+
 	glViewport(0, 0, 960, 540);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	state.loadResources();
 }
@@ -72,6 +76,8 @@ int main(int argc, char *argv[])
 	init();
 	SDL_Event event;
 	bool done = false;
+	int t = LoadTexture(RESOURCE_FOLDER"font1.png");
+	SheetSprite a = SheetSprite(t, 0.5f, 0.5f, 16.0f/512, 16.0f/512, 1.0f);
 	while (!done) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		while (SDL_PollEvent(&event)) {
@@ -93,6 +99,7 @@ int main(int argc, char *argv[])
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;
+		a.Draw(&program);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 

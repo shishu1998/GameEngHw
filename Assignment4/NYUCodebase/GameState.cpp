@@ -1,10 +1,16 @@
 #define _USE_MATH_DEFINES
 #include "GameState.h"
 #define levelFILE "Arne.txt"
+#define tileSize 0.5f
 
 //Loads the required resources for the entities
 void GameState::loadResources() {
 	map.Load(levelFILE);
+	for (int y = 0; y < map.mapHeight; y++) {
+		for (int x = 0; x < map.mapWidth; x++) {
+			// do something with map.mapData[y][x] 
+		}
+	}
 }
 
 //Initializes the Entities stored in the state
@@ -21,4 +27,5 @@ void GameState::updateGameState(float elapsed) {
 
 void GameState::PlaceEntity(std::string type, float x, float y)
 {
+	entities.emplace_back();
 }
