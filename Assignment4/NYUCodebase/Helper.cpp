@@ -2,6 +2,9 @@
 #include <assert.h>
 #define SPRITESHEET_WIDTH 256
 #define SPRITESHEET_HEIGHT 128
+#define spriteCountX 16
+#define spriteCountY 8
+#define tileSize 0.3f
 
 // Loads Textures and return the Texture ID
 GLuint LoadTexture(const char *filePath) {
@@ -72,6 +75,62 @@ void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float 
 	program.SetProjectionMatrix(projectionMatrix);
 	program.SetViewMatrix(viewMatrix);
 	DrawText(&program, TextureID, text, size, space);
+}
+
+//Draw the level starting from an x,y coordinate
+void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, float x, float y)
+{
+	Matrix modelMatrix;
+	modelMatrix.Translate(x, y, 0);
+	Matrix viewMatrix;
+	Matrix projectionMatrix;
+	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
+
+	program.SetModelMatrix(modelMatrix);
+	program.SetProjectionMatrix(projectionMatrix);
+	program.SetViewMatrix(viewMatrix);
+
+	std::vector<float> vertexData;
+	std::vector<float> texCoordData;
+	for (int y = 0; y < map.mapHeight; y++) {
+		for (int x = 0; x < map.mapWidth; x++) {
+			if (map.mapData[y][x] != 0) {
+				float u = (float)(map.mapData[y][x] % spriteCountX) / (float)spriteCountX;
+				float v = (float)(map.mapData[y][x] / spriteCountX) / (float)spriteCountY;
+				float spriteWidth = 1.0f / (float)spriteCountX;
+				float spriteHeight = 1.0f / (float)spriteCountY;
+				vertexData.insert(vertexData.end(), {
+					tileSize * x, -tileSize * y,
+					tileSize * x, (-tileSize * y) - tileSize,
+					(tileSize * x) + tileSize, (-tileSize * y) - tileSize,
+
+					tileSize * x, -tileSize * y,
+					(tileSize * x) + tileSize, (-tileSize * y) - tileSize,
+					(tileSize * x) + tileSize, -tileSize * y
+					});
+				texCoordData.insert(texCoordData.end(), {
+					u, v,
+					u, v + spriteHeight,
+					u + spriteWidth, v + spriteHeight,
+
+					u, v,
+					u + spriteWidth, v + spriteHeight,
+					u + spriteWidth, v
+					});
+			}
+		}
+	}
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertexData.data());
+	glEnableVertexAttribArray(program.positionAttribute);
+	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData.data());
+	glEnableVertexAttribArray(program.texCoordAttribute);
+
+	glDrawArrays(GL_TRIANGLES, 0, (int)vertexData.size() / 2);
+
+	glDisableVertexAttribArray(program.positionAttribute);
+	glDisableVertexAttribArray(program.texCoordAttribute);
 }
 
 // Normalize the coordinates of the sprite sheet and create a sheetsprite
