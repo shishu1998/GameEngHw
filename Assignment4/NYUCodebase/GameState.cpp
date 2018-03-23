@@ -9,7 +9,7 @@ void GameState::loadResources() {
 	map.Load(levelFILE);
 	for (int y = 0; y < map.mapHeight; y++) {
 		for (int x = 0; x < map.mapWidth; x++) {
-			PlaceEntity(map.mapData[y][x], -3.525f + x * 0.05, 0 - y*0.05);
+			if(map.mapData[y][x] != 0) PlaceEntity(map.mapData[y][x], -3.525f + x * 0.05, 0 - y*0.05);
 		}
 	}
 }
