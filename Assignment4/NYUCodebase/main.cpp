@@ -46,6 +46,7 @@ void init() {
 	glViewport(0, 0, 960, 540);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glUseProgram(program.programID);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	state.loadResources();
 }
@@ -97,9 +98,7 @@ int main(int argc, char *argv[])
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;
-		for (int i = 0; i < state.entities.size(); ++i) {
-			state.entities[i].Render(program);
-		}
+		DrawLevel(program, state.TextureID, state.map, 0.0, 0.0);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 
