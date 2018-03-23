@@ -5,10 +5,11 @@
 
 //Loads the required resources for the entities
 void GameState::loadResources() {
+	TextureID = LoadTexture(RESOURCE_FOLDER"arne_sprites.png");
 	map.Load(levelFILE);
 	for (int y = 0; y < map.mapHeight; y++) {
 		for (int x = 0; x < map.mapWidth; x++) {
-			// do something with map.mapData[y][x] 
+			PlaceEntity(map.mapData[y][x], -3.525f + x * 0.05, 0 - y*0.05);
 		}
 	}
 }
@@ -25,7 +26,10 @@ void GameState::reset() {
 void GameState::updateGameState(float elapsed) {
 }
 
-void GameState::PlaceEntity(std::string type, float x, float y)
+void GameState::PlaceEntity(int spriteIndex, float x, float y)
 {
-	entities.emplace_back();
+	int spriteSheetx = spriteIndex % 16;
+	int spriteSheetY = spriteIndex / 16;
+	SheetSprite sprite = createSheetSprite(TextureID, spriteSheetx * 16.0f, spriteSheetY * 16.0f, 16.0f, 16.0f, 0.1);
+	entities.emplace_back(x, y, sprite);
 }

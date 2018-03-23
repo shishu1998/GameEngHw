@@ -12,5 +12,5 @@ public:
 	void initEntities();
 	void reset();
 	void updateGameState(float elapsed);
-	void PlaceEntity(std::string type, float x, float y);
+	void PlaceEntity(int spriteIndex, float x, float y);
 };

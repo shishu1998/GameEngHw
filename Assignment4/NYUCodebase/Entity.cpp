@@ -1,8 +1,8 @@
 #include "Entity.h"
 
 Entity::Entity() {}
-Entity::Entity(float x, float y, EntityType type, SheetSprite sprite) : Position(x,y,0), 
-size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), entityType(type), sprite(sprite) {
+Entity::Entity(float x, float y, SheetSprite sprite) : Position(x,y,0), 
+size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite) {
 }
 
 void Entity::Render(ShaderProgram & Program)

@@ -8,7 +8,7 @@ enum EntityType {Player, Enemy, Bullet, Life};
 class Entity {
 public:
 	Entity();
-	Entity(float x, float y, EntityType type, SheetSprite sprite);
+	Entity(float x, float y, SheetSprite sprite);
 	void Render(ShaderProgram &Program);
 	bool CollidesWith(const Entity& Other);
 	void Update(float elapsed);
