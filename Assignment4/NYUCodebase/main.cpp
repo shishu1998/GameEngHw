@@ -18,6 +18,7 @@
 
 SDL_Window* displayWindow;
 ShaderProgram program;
+Matrix projectionMatrix;
 const Uint8 *keys = SDL_GetKeyboardState(nullptr);
 int fontTextureID;
 float lastFrameTicks = 0.0f;
@@ -46,8 +47,11 @@ void init() {
 	glViewport(0, 0, 960, 540);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
+	program.SetProjectionMatrix(projectionMatrix);
 	glUseProgram(program.programID);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
+	
 	state.loadResources();
 }
 
@@ -98,7 +102,7 @@ int main(int argc, char *argv[])
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;
-		DrawLevel(program, state.TextureID, state.map, 0.0, 0.0);
+		DrawLevel(program, state.TextureID, state.map, -3.55, 2.0);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 

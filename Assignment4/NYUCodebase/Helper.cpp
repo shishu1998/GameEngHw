@@ -4,7 +4,7 @@
 #define SPRITESHEET_HEIGHT 128
 #define spriteCountX 16
 #define spriteCountY 8
-#define tileSize 0.3f
+#define tileSize 0.2f
 
 // Loads Textures and return the Texture ID
 GLuint LoadTexture(const char *filePath) {
@@ -67,27 +67,20 @@ void DrawText(ShaderProgram *program, int fontTexture, std::string text, float s
 void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float x, float y, float size, float space) {
 	Matrix modelMatrix;
 	Matrix viewMatrix;
-	Matrix projectionMatrix;
 	modelMatrix.Translate(x,y,0);
-	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
-
 	program.SetModelMatrix(modelMatrix);
-	program.SetProjectionMatrix(projectionMatrix);
 	program.SetViewMatrix(viewMatrix);
 	DrawText(&program, TextureID, text, size, space);
 }
 
 //Draw the level starting from an x,y coordinate
-void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, float x, float y)
+void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, float pos_x, float pos_y)
 {
 	Matrix modelMatrix;
-	modelMatrix.Translate(x, y, 0);
+	modelMatrix.Translate(pos_x, pos_y, 0);
 	Matrix viewMatrix;
-	Matrix projectionMatrix;
-	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
 
 	program.SetModelMatrix(modelMatrix);
-	program.SetProjectionMatrix(projectionMatrix);
 	program.SetViewMatrix(viewMatrix);
 
 	std::vector<float> vertexData;
