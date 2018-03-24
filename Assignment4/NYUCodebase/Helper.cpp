@@ -69,12 +69,10 @@ void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float 
 }
 
 //Draw the level starting from an x,y coordinate
-void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, Entity player, float pos_x, float pos_y)
+void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, Matrix viewMatrix, float pos_x, float pos_y)
 {
 	Matrix modelMatrix;
 	modelMatrix.Translate(pos_x, pos_y, 0);
-	Matrix viewMatrix;
-	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0.0);
 
 	program.SetModelMatrix(modelMatrix);
 	program.SetViewMatrix(viewMatrix);

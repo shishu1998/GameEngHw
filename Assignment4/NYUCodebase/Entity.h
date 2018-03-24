@@ -9,7 +9,7 @@ class Entity {
 public:
 	Entity();
 	Entity(float x, float y, SheetSprite sprite, EntityType type);
-	void Render(ShaderProgram &Program);
+	void Render(ShaderProgram &Program, Matrix viewMatrix);
 	bool CollidesWith(const Entity& Other);
 	void Update(float elapsed);
 

@@ -5,11 +5,9 @@ Entity::Entity(float x, float y, SheetSprite sprite, EntityType type) : Position
 size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite), entityType(type) {
 }
 
-void Entity::Render(ShaderProgram & Program)
+void Entity::Render(ShaderProgram & Program, Matrix viewMatrix)
 {
 	Matrix modelMatrix;
-	Matrix viewMatrix;
-	if (entityType == Player) viewMatrix.Translate(-Position.x, -Position.y, 0);
 	modelMatrix.Translate(Position.x, Position.y, 0);
 
 	Program.SetModelMatrix(modelMatrix);

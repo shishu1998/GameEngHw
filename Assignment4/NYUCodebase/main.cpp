@@ -57,8 +57,12 @@ void init() {
 
 void processGameState(GameState& state) {
 	if (keys[SDL_SCANCODE_A]) {
+		state.player.Position.x -= 0.1;
+		state.viewMatrix.Translate(0.1, 0, 0);
 	}
 	else if (keys[SDL_SCANCODE_D]) {
+		state.player.Position.x += 0.1;
+		state.viewMatrix.Translate(-0.1, 0, 0);
 	}
 	else {
 	}
@@ -102,8 +106,8 @@ int main(int argc, char *argv[])
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;
-		DrawLevel(program, state.TextureID, state.map, state.player, 0.0, 0.0);
-		state.player.Render(program);
+		processGameState(state);
+		state.Render(program);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 
