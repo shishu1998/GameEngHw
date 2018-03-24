@@ -8,9 +8,10 @@ public:
 	int TextureID;
 	FlareMap map;
 	std::vector<Entity> entities;
+	Entity player;
 	void loadResources();
 	void initEntities();
 	void reset();
 	void updateGameState(float elapsed);
-	void PlaceEntity(int spriteIndex, float x, float y);
+	void PlaceEntity(std::string type, float x, float y);
 };

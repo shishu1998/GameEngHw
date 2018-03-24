@@ -1,11 +1,15 @@
 #define _USE_MATH_DEFINES
 #include "GameState.h"
+#include "Helper.h"
 #define levelFILE "Arne.txt"
 
 //Loads the required resources for the entities
 void GameState::loadResources() {
 	TextureID = LoadTexture(RESOURCE_FOLDER"arne_sprites.png");
 	map.Load(levelFILE);
+	for (int i = 0; i < map.entities.size(); i++) {
+		PlaceEntity(map.entities[i].type, map.entities[i].x * tileSize, map.entities[i].y * -tileSize);
+	}
 }
 
 //Initializes the Entities stored in the state
@@ -20,6 +24,12 @@ void GameState::reset() {
 void GameState::updateGameState(float elapsed) {
 }
 
-void GameState::PlaceEntity(int spriteIndex, float x, float y)
+void GameState::PlaceEntity(std::string type, float x, float y)
 {
+	if (type == "Player") {
+		player = Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 98, tileSize), Player);
+	}
+	else {
+		
+	}
 }

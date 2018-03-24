@@ -4,11 +4,11 @@
 #include "SheetSprite.h"
 #include "Vector3.h"
 
-enum EntityType {Player, Enemy, Bullet, Life};
+enum EntityType {Player, Enemy};
 class Entity {
 public:
 	Entity();
-	Entity(float x, float y, SheetSprite sprite);
+	Entity(float x, float y, SheetSprite sprite, EntityType type);
 	void Render(ShaderProgram &Program);
 	bool CollidesWith(const Entity& Other);
 	void Update(float elapsed);

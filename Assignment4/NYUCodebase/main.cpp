@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
 		}
 		accumulator = elapsed;
 		DrawLevel(program, state.TextureID, state.map, -3.55, 2.0);
+		state.player.Render(program);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 

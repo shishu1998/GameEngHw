@@ -1,21 +1,18 @@
 #include "Entity.h"
 
 Entity::Entity() {}
-Entity::Entity(float x, float y, SheetSprite sprite) : Position(x,y,0), 
-size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite) {
+Entity::Entity(float x, float y, SheetSprite sprite, EntityType type) : Position(x,y,0), 
+size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite), entityType(type) {
 }
 
 void Entity::Render(ShaderProgram & Program)
 {
 	Matrix modelMatrix;
-	Matrix projectionMatrix;
 	Matrix viewMatrix;
-
-	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
+	if (entityType == Player) viewMatrix.Translate(-Position.x, -Position.y, 0);
 	modelMatrix.Translate(Position.x, Position.y, 0);
 
 	Program.SetModelMatrix(modelMatrix);
-	Program.SetProjectionMatrix(projectionMatrix);
 	Program.SetViewMatrix(viewMatrix);
 
 	sprite.Draw(&Program);

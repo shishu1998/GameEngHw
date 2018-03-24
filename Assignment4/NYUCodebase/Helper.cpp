@@ -1,10 +1,5 @@
 #include "Helper.h"
 #include <assert.h>
-#define SPRITESHEET_WIDTH 256
-#define SPRITESHEET_HEIGHT 128
-#define spriteCountX 16
-#define spriteCountY 8
-#define tileSize 0.2f
 
 // Loads Textures and return the Texture ID
 GLuint LoadTexture(const char *filePath) {
@@ -129,6 +124,16 @@ void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, float pos_x
 // Normalize the coordinates of the sprite sheet and create a sheetsprite
 SheetSprite& createSheetSprite(unsigned int textureID, float x, float y, float width, float height, float size) {
 	return SheetSprite(textureID, x / SPRITESHEET_WIDTH, y / SPRITESHEET_HEIGHT, width / SPRITESHEET_WIDTH, height / SPRITESHEET_HEIGHT, size);
+}
+
+SheetSprite& createSheetSpriteBySpriteIndex(unsigned int textureID, int spriteIndex, float size)
+{
+	{
+		int spriteSheetx = spriteIndex % spriteCountX;
+		int spriteSheetY = spriteIndex / spriteCountX;
+		SheetSprite sprite = createSheetSprite(textureID, spriteSheetx * 16.0f, spriteSheetY * 16.0f, 16.0f, 16.0f, size);
+		return sprite;
+	}
 }
 
 float lerp(float v0, float v1, float t)
