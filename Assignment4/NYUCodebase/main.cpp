@@ -57,14 +57,13 @@ void init() {
 
 void processGameState(GameState& state) {
 	if (keys[SDL_SCANCODE_A]) {
-		state.player.Position.x -= 0.1;
-		state.viewMatrix.Translate(0.1, 0, 0);
+		state.player.acceleration.x = -0.2;
 	}
 	else if (keys[SDL_SCANCODE_D]) {
-		state.player.Position.x += 0.1;
-		state.viewMatrix.Translate(-0.1, 0, 0);
+		state.player.acceleration.x = 0.2;
 	}
 	else {
+		state.player.acceleration.x = 0.0;
 	}
 }
 
@@ -102,7 +101,7 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		while (elapsed >= FIXED_TIMESTEP) {
-			//updateGameState(state,FIXED_TIMESTEP);
+			updateGameState(state,FIXED_TIMESTEP);
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;

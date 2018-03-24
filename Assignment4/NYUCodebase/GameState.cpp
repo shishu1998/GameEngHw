@@ -23,15 +23,18 @@ void GameState::reset() {
 
 //Updates the GameState based on the time elapsed
 void GameState::updateGameState(float elapsed) {
+	player.Update(elapsed);
+	viewMatrix.Identity();
+	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
 }
 
 void GameState::PlaceEntity(std::string type, float x, float y)
 {
 	if (type == "Player") {
-		player = Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 98, tileSize), Player);
+		player = Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 98, tileSize), Player, false);
 	}
 	else if (type == "Enemy") {
-		entities.emplace_back(Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 81, tileSize), Enemy));
+		entities.emplace_back(Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 81, tileSize), Enemy, false));
 	}
 }
 

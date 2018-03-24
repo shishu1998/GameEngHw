@@ -3,13 +3,15 @@
 #include "helper.h"
 #include "SheetSprite.h"
 #include "Vector3.h"
+#define Friction_X 0.2f
 
 enum EntityType {Player, Enemy};
 class Entity {
 public:
 	Entity();
-	Entity(float x, float y, SheetSprite sprite, EntityType type);
+	Entity(float x, float y, SheetSprite sprite, EntityType type, bool isStatic);
 	void Render(ShaderProgram &Program, Matrix viewMatrix);
+	void ResetContactFlags();
 	bool CollidesWith(const Entity& Other);
 	void Update(float elapsed);
 

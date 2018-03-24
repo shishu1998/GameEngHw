@@ -1,8 +1,8 @@
 #include "Entity.h"
 
 Entity::Entity() {}
-Entity::Entity(float x, float y, SheetSprite sprite, EntityType type) : Position(x,y,0), 
-size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite), entityType(type) {
+Entity::Entity(float x, float y, SheetSprite sprite, EntityType type, bool isStatic) : Position(x,y,0), 
+size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite), entityType(type), isStatic(isStatic) {
 }
 
 void Entity::Render(ShaderProgram & Program, Matrix viewMatrix)
@@ -16,6 +16,10 @@ void Entity::Render(ShaderProgram & Program, Matrix viewMatrix)
 	sprite.Draw(&Program);
 }
 
+void Entity::ResetContactFlags() {
+	collidedLeft = collidedRight = collidedTop = collidedBottom = false;
+}
+
 bool Entity::CollidesWith(const Entity& Other)
 {
 	return !(Position.y - size.y / 2 > Other.Position.y + Other.size.y / 2 || Position.y + size.y / 2 < Other.Position.y - Other.size.y / 2 || Position.x - size.x / 2 > Other.Position.x + Other.size.x / 2 || Position.x + size.x / 2 < Other.Position.x - Other.size.x / 2);
@@ -23,6 +27,7 @@ bool Entity::CollidesWith(const Entity& Other)
 
 void Entity::Update(float elapsed)
 {
+	ResetContactFlags();
 	velocity.x = lerp(velocity.x, 0.0f, elapsed * acceleration.x);
 	velocity.y = lerp(velocity.y, 0.0f, elapsed * acceleration.y);
 	velocity.x += acceleration.x * elapsed;
@@ -31,5 +36,4 @@ void Entity::Update(float elapsed)
 	//collisionY();
 	Position.x += velocity.x * elapsed;
 	//collisionX();
-	collidedLeft = collidedRight = collidedTop = collidedBottom = false;
 }
