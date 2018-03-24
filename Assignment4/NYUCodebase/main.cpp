@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;
-		DrawLevel(program, state.TextureID, state.map, -3.55, 2.0);
+		DrawLevel(program, state.TextureID, state.map, state.player, 0.0, 0.0);
 		state.player.Render(program);
 		SDL_GL_SwapWindow(displayWindow);
 	}

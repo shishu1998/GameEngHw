@@ -48,5 +48,5 @@ data=
 [ObjectsLayer]
 # Player
 type=Player
-location=49,25,1,1
+location=49,26,1,1
 

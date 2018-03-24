@@ -13,8 +13,8 @@ GLuint LoadTexture(const char *filePath) {
 	glGenTextures(1, &retTexture);
 	glBindTexture(GL_TEXTURE_2D, retTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	stbi_image_free(image);
 	return retTexture;
 }
@@ -69,11 +69,12 @@ void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float 
 }
 
 //Draw the level starting from an x,y coordinate
-void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, float pos_x, float pos_y)
+void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, Entity player, float pos_x, float pos_y)
 {
 	Matrix modelMatrix;
 	modelMatrix.Translate(pos_x, pos_y, 0);
 	Matrix viewMatrix;
+	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0.0);
 
 	program.SetModelMatrix(modelMatrix);
 	program.SetViewMatrix(viewMatrix);
