@@ -35,8 +35,8 @@ void GameState::updateGameState(float elapsed) {
 						player.acceleration.y = 0;
 						player.velocity.y = 0;
 					}
-					if (player.collidedTop) player.Position.y -= (fabs(player.Position.y - (playerGridY + i) * tileSize) + 0.01);
-					if (player.collidedBottom) player.Position.y += (fabs(player.Position.y - (playerGridY + i) * tileSize) + 0.01);
+					//if (player.collidedTop) player.Position.y -= tileSize;
+					//if (player.collidedBottom) player.Position.y += tileSize;
 				}
 			}
 		}

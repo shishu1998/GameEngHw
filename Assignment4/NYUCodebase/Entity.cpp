@@ -28,8 +28,8 @@ bool Entity::CollidesWith(const Entity& Other)
 
 bool Entity::CollidesWithTile(int tileX, int tileY)
 {
-	float worldX = tileX * tileSize;
-	float worldY = tileY * -tileSize;
+	float worldX = tileX * tileSize + tileSize/2;
+	float worldY = tileY * -tileSize - tileSize/2;
 	if (Position.x > worldX && Position.x < worldX + tileSize && Position.y - size.y / 2 < worldY) collidedBottom = true;
 	if (Position.x > worldX && Position.x < worldX + tileSize && Position.y + size.y / 2 > worldY - tileSize) collidedTop = true;
 	if (Position.y < worldY && Position.y > worldY - tileSize && Position.x - size.x / 2 < worldX + tileSize) collidedLeft = true;
