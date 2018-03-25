@@ -31,11 +31,12 @@ void GameState::updateGameState(float elapsed) {
 		for (int j = -1; j < 2; ++j) {
 			if (solidTiles.find(map.mapData[playerGridY + i][playerGridX + j]) != solidTiles.end()) {
 				if (player.CollidesWithTile(playerGridX + j, playerGridY + i)) {
-					if (player.collidedLeft || player.collidedRight) {
-						player.acceleration.x = 0;
-						player.velocity.x = 0;
+					if (player.collidedTop || player.collidedBottom) {
+						player.acceleration.y = 0;
+						player.velocity.y = 0;
 					}
-					if (player.collidedRight) player.Position.x -= (player.Position.x - (playerGridX + j) * tileSize - tileSize/10);
+					if (player.collidedTop) player.Position.y -= (fabs(player.Position.y - (playerGridY + i) * tileSize) + 0.01);
+					if (player.collidedBottom) player.Position.y += (fabs(player.Position.y - (playerGridY + i) * tileSize) + 0.01);
 				}
 			}
 		}

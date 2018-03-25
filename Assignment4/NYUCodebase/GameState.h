@@ -3,7 +3,7 @@
 #include "FlareMap.h"
 #include <vector>
 #include <unordered_map>
-#define Solids {{17,1},{19,1},{33,1},{91,1},{92,1},{93,1},{94,1},{107,1},{108,1},{109,1},{110,1},{121,1}, {122,1}, {123,1},{124,1},{125,1},{126,1}}
+#define Solids {{63,1},{64,1},{65,1}, {69,1}, {92,1}, {93,1}, {95,1}}
 
 class GameState {
 public:

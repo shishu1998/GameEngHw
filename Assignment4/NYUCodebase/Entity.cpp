@@ -41,9 +41,8 @@ void Entity::Update(float elapsed)
 {
 	ResetContactFlags();
 	velocity.x = lerp(velocity.x, 0.0f, elapsed * Friction_X);
-	velocity.y = lerp(velocity.y, 0.0f, elapsed * GRAVITY);
 	velocity.x += acceleration.x * elapsed;
-	velocity.y += acceleration.y * elapsed;
+	velocity.y += GRAVITY * elapsed;
 	Position.y += velocity.y * elapsed;
 	//collisionY();
 	Position.x += velocity.x * elapsed;
