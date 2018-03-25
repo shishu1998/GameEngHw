@@ -44,7 +44,7 @@ void Entity::CollideWithY(int tileY) {
 	}
 	if (Position.y + size.y / 2 > worldY - tileSize) { 
 		collidedTop = true; 
-		//Position.y -= ((worldY - tileSize) - (Position.y + size.y / 2)  + tileSize * 0.01);
+		//Position.y -= ((Position.y + size.y / 2) - (worldY - tileSize) + tileSize * 0.01);
 	}
 }
 
