@@ -13,10 +13,10 @@
 #include "FlareMap.h"
 #include "Entity.h"
 #include <vector>
-#define SPRITESHEET_WIDTH 256
-#define SPRITESHEET_HEIGHT 128
-#define spriteCountX 16
-#define spriteCountY 8
+#define SPRITESHEET_WIDTH 630
+#define SPRITESHEET_HEIGHT 630
+#define spriteCountX 30
+#define spriteCountY 30
 #define tileSize 0.2f
 
 class Entity;

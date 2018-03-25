@@ -130,7 +130,7 @@ SheetSprite& createSheetSpriteBySpriteIndex(unsigned int textureID, int spriteIn
 	{
 		int spriteSheetx = spriteIndex % spriteCountX;
 		int spriteSheetY = spriteIndex / spriteCountX;
-		SheetSprite sprite = createSheetSprite(textureID, spriteSheetx * 16.0f, spriteSheetY * 16.0f, 16.0f, 16.0f, size);
+		SheetSprite sprite = createSheetSprite(textureID, spriteSheetx * 21.0f, spriteSheetY * 21.0f, 21.0f, 21.0f, size);
 		return sprite;
 	}
 }
