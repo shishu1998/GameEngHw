@@ -15,6 +15,8 @@ public:
 	void ResetContactFlags();
 	bool CollidesWith(const Entity& Other);
 	bool CollidesWithTile(int tileX, int tileY);
+	void CollideWithX(int tileX);
+	void CollideWithY(int tileY);
 	void Update(float elapsed);
 
 	SheetSprite sprite;

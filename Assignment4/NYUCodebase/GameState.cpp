@@ -27,18 +27,14 @@ void GameState::updateGameState(float elapsed) {
 	int playerGridX;
 	int playerGridY;
 	worldToTileCoordinates(player.Position.x, player.Position.y, &playerGridX, &playerGridY);
-	for (int i = -1; i < 2; ++i) {
-		for (int j = -1; j < 2; ++j) {
-			if (solidTiles.find(map.mapData[playerGridY + i][playerGridX + j]) != solidTiles.end()) {
-				if (player.CollidesWithTile(playerGridX + j, playerGridY + i)) {
-					if (player.collidedTop || player.collidedBottom) {
-						player.acceleration.y = 0;
-						player.velocity.y = 0;
-					}
-					//if (player.collidedTop) player.Position.y -= tileSize;
-					//if (player.collidedBottom) player.Position.y += tileSize;
-				}
-			}
+	if (map.mapData[playerGridY][playerGridX] != 0 && player.CollidesWithTile(playerGridX, playerGridY)) {
+		if (player.collidedTop || player.collidedBottom) {
+			player.acceleration.y = 0;
+			player.velocity.y = 0;
+		}
+		if (player.collidedLeft || player.collidedRight) {
+			player.acceleration.x = 0;
+			player.velocity.x = 0;
 		}
 	}
 	viewMatrix.Identity();
