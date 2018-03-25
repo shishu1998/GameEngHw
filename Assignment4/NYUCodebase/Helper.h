@@ -28,3 +28,4 @@ void DrawLevel(ShaderProgram& program, int textureID, FlareMap map, Matrix viewM
 SheetSprite& createSheetSprite(unsigned int textureID, float x, float y, float width, float height, float size);
 SheetSprite& createSheetSpriteBySpriteIndex(unsigned int textureID, int spriteIndex, float size);
 float lerp(float v0, float v1, float t);
+void worldToTileCoordinates(float worldX, float worldY, int *gridX, int *gridY);

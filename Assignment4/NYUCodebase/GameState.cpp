@@ -24,6 +24,16 @@ void GameState::reset() {
 //Updates the GameState based on the time elapsed
 void GameState::updateGameState(float elapsed) {
 	player.Update(elapsed);
+	int playerGridX;
+	int playerGridY;
+	worldToTileCoordinates(player.Position.x, player.Position.y, &playerGridX, &playerGridY);
+	for (int i = -1; i < 2; ++i) {
+		for (int j = -1; j < 2; ++j) {
+			if (solidTiles.find(map.mapData[playerGridY + i][playerGridX + j]) != solidTiles.end()) {
+				if (player.CollidesWithTile(playerGridX + j, playerGridY + i)) player.acceleration.x = 0;
+			}
+		}
+	}
 	viewMatrix.Identity();
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
 }
