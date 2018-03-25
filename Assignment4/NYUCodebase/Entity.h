@@ -14,9 +14,11 @@ public:
 	void Render(ShaderProgram &Program, Matrix viewMatrix);
 	void ResetContactFlags();
 	bool CollidesWith(const Entity& Other);
-	bool CollidesWithTile(int tileX, int tileY);
-	void CollideWithX(int tileX);
-	void CollideWithY(int tileY);
+	void CollideLeft(int tileX);
+	void CollideRight(int tileX);
+	void CollideTop(int tileY);
+	void CollideBottom(int tileY);
+
 	void Update(float elapsed);
 
 	SheetSprite sprite;

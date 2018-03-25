@@ -24,19 +24,14 @@ void GameState::reset() {
 //Updates the GameState based on the time elapsed
 void GameState::updateGameState(float elapsed) {
 	player.Update(elapsed);
-	int playerGridX;
-	int playerGridY;
+	int playerGridX, playerGridY, playerGridLeft, playerGridRight, playerGridTop, playerGridBottom;
 	worldToTileCoordinates(player.Position.x, player.Position.y, &playerGridX, &playerGridY);
-	if (map.mapData[playerGridY][playerGridX] != 0 && player.CollidesWithTile(playerGridX, playerGridY)) {
-		if (player.collidedTop || player.collidedBottom) {
-			player.acceleration.y = 0;
-			player.velocity.y = 0;
-		}
-		if (player.collidedLeft || player.collidedRight) {
-			player.acceleration.x = 0;
-			player.velocity.x = 0;
-		}
-	}
+	worldToTileCoordinates(player.Position.x - player.size.x /2, player.Position.y - player.size.y / 2, &playerGridLeft, &playerGridBottom);
+	worldToTileCoordinates(player.Position.x + player.size.x/2, player.Position.y + player.size.y / 2, &playerGridRight, &playerGridTop);
+	if (map.mapData[playerGridY][playerGridLeft] != 0) player.CollideLeft(playerGridLeft);
+	if (map.mapData[playerGridY][playerGridRight] != 0) player.CollideLeft(playerGridRight);
+	if (map.mapData[playerGridTop][playerGridX] != 0) player.CollideTop(playerGridTop);
+	if (map.mapData[playerGridBottom][playerGridX] != 0) player.CollideBottom(playerGridBottom);
 	viewMatrix.Identity();
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
 }
