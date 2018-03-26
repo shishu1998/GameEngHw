@@ -1,7 +1,6 @@
 #define _USE_MATH_DEFINES
 #include "GameState.h"
 #include "Helper.h"
-#define levelFILE "Alien.txt"
 
 //Loads the required resources for the entities
 void GameState::loadResources() {
@@ -24,14 +23,21 @@ void GameState::reset() {
 //Updates the GameState based on the time elapsed
 void GameState::updateGameState(float elapsed) {
 	player.Update(elapsed);
-	int playerGridX, playerGridY, playerGridLeft, playerGridRight, playerGridTop, playerGridBottom;
-	worldToTileCoordinates(player.Position.x, player.Position.y, &playerGridX, &playerGridY);
-	worldToTileCoordinates(player.Position.x - player.size.x /2, player.Position.y - player.size.y / 2, &playerGridLeft, &playerGridBottom);
-	worldToTileCoordinates(player.Position.x + player.size.x/2, player.Position.y + player.size.y / 2, &playerGridRight, &playerGridTop);
-	if (map.mapData[playerGridTop][playerGridX] != 0) player.CollideTop(playerGridTop);
-	if (map.mapData[playerGridBottom][playerGridX] != 0) player.CollideBottom(playerGridBottom);
-	if (map.mapData[playerGridY][playerGridLeft] != 0) player.CollideLeft(playerGridLeft);
-	if (map.mapData[playerGridY][playerGridRight] != 0) player.CollideRight(playerGridRight);
+	for (int i = 0; i < entities.size(); ++i) {
+		entities[i].Update(elapsed);
+		entities[i].CollidesWithTile(map.mapData);
+		if (entities[i].collidedLeft) {
+			entities[i].acceleration.x = 0.3;
+		}
+		if (entities[i].collidedRight) {
+			entities[i].acceleration.x = -0.3;
+		}
+	}
+	player.CollidesWithTile(map.mapData);
+	for (int i = 0; i < entities.size(); ++i) {
+		if (player.CollidesWith(entities[i])) 
+			player.velocity.y = 0.6;
+	}
 	viewMatrix.Identity();
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
 }
@@ -42,7 +48,9 @@ void GameState::PlaceEntity(std::string type, float x, float y)
 		player = Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 28, tileSize), Player, false);
 	}
 	else if (type == "Enemy") {
-		entities.emplace_back(Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 58, tileSize), Enemy, false));
+		Entity enemy = Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 446, tileSize), Enemy, false);
+		enemy.acceleration.x = 0.3;
+		entities.emplace_back(enemy);
 	}
 }
 

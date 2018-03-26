@@ -63,7 +63,7 @@ void processGameState(GameState& state) {
 		state.player.acceleration.x = 0.2;
 	}
 	else if (keys[SDL_SCANCODE_SPACE]) {
-		state.player.velocity.y = 0.2;
+		if(state.player.collidedBottom)	state.player.velocity.y = 0.3;
 	}
 	else {
 		state.player.acceleration.x = 0.0;

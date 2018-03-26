@@ -2,15 +2,15 @@
 #include "Entity.h"
 #include "FlareMap.h"
 #include <vector>
-#include <unordered_map>
-#define Solids {{63,1},{64,1},{65,1}, {69,1}, {92,1}, {93,1}, {95,1}}
+#define levelFILE "Alien.txt"
+#define Solids {62,94}
 
 class GameState {
 public:
 	int TextureID;
 	FlareMap map;
 	std::vector<Entity> entities;
-	std::unordered_map<int, int> solidTiles = std::unordered_map<int,int>(Solids);
+	std::unordered_set<int> solidTiles = std::unordered_set<int>(Solids);
 	Entity player;
 	Matrix viewMatrix;
 	void loadResources();

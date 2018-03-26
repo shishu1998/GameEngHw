@@ -64,6 +64,19 @@ void Entity::CollideBottom(int tileY) {
 		Position.y += (worldY - (Position.y - size.y / 2)) + tileSize * 0.01;
 	}
 }
+
+void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData)
+{
+	int playerGridX, playerGridY, playerGridLeft, playerGridRight, playerGridTop, playerGridBottom;
+	worldToTileCoordinates(Position.x, Position.y, &playerGridX, &playerGridY);
+	worldToTileCoordinates(Position.x - size.x / 2, Position.y - size.y / 2, &playerGridLeft, &playerGridBottom);
+	worldToTileCoordinates(Position.x + size.x / 2, Position.y + size.y / 2, &playerGridRight, &playerGridTop);
+	if (mapData[playerGridTop][playerGridX] != 0) CollideTop(playerGridTop);
+	if (mapData[playerGridBottom][playerGridX] != 0) CollideBottom(playerGridBottom);
+	if (mapData[playerGridY][playerGridLeft] != 0) CollideLeft(playerGridLeft);
+	if (mapData[playerGridY][playerGridRight] != 0) CollideRight(playerGridRight);
+}
+
 void Entity::Update(float elapsed)
 {
 	ResetContactFlags();

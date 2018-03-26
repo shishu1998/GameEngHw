@@ -1,4 +1,5 @@
 #pragma once
+#include <unordered_set>
 #include "ShaderProgram.h"
 #include "helper.h"
 #include "SheetSprite.h"
@@ -18,6 +19,7 @@ public:
 	void CollideRight(int tileX);
 	void CollideTop(int tileY);
 	void CollideBottom(int tileY);
+	void CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData);
 
 	void Update(float elapsed);
 
