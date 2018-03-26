@@ -3,7 +3,7 @@
 #include "FlareMap.h"
 #include <vector>
 #define levelFILE "Alien.txt"
-#define Solids {62,94}
+#define Solids {61,62,68,92,94,490,579}
 
 class GameState {
 public:

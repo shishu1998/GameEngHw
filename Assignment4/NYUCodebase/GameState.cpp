@@ -25,7 +25,7 @@ void GameState::updateGameState(float elapsed) {
 	player.Update(elapsed);
 	for (int i = 0; i < entities.size(); ++i) {
 		entities[i].Update(elapsed);
-		entities[i].CollidesWithTile(map.mapData);
+		entities[i].CollidesWithTile(map.mapData, solidTiles);
 		if (entities[i].collidedLeft) {
 			entities[i].acceleration.x = 0.3;
 		}
@@ -33,7 +33,7 @@ void GameState::updateGameState(float elapsed) {
 			entities[i].acceleration.x = -0.3;
 		}
 	}
-	player.CollidesWithTile(map.mapData);
+	player.CollidesWithTile(map.mapData, solidTiles);
 	for (int i = 0; i < entities.size(); ++i) {
 		if (player.CollidesWith(entities[i])) 
 			player.velocity.y = 0.6;

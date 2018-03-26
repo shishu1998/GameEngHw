@@ -65,16 +65,16 @@ void Entity::CollideBottom(int tileY) {
 	}
 }
 
-void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData)
+void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData, std::unordered_set<int> solids)
 {
 	int playerGridX, playerGridY, playerGridLeft, playerGridRight, playerGridTop, playerGridBottom;
 	worldToTileCoordinates(Position.x, Position.y, &playerGridX, &playerGridY);
 	worldToTileCoordinates(Position.x - size.x / 2, Position.y - size.y / 2, &playerGridLeft, &playerGridBottom);
 	worldToTileCoordinates(Position.x + size.x / 2, Position.y + size.y / 2, &playerGridRight, &playerGridTop);
-	if (mapData[playerGridTop][playerGridX] != 0) CollideTop(playerGridTop);
-	if (mapData[playerGridBottom][playerGridX] != 0) CollideBottom(playerGridBottom);
-	if (mapData[playerGridY][playerGridLeft] != 0) CollideLeft(playerGridLeft);
-	if (mapData[playerGridY][playerGridRight] != 0) CollideRight(playerGridRight);
+	if (solids.find(mapData[playerGridTop][playerGridX]) != solids.end()) CollideTop(playerGridTop);
+	if (solids.find(mapData[playerGridBottom][playerGridX]) != solids.end()) CollideBottom(playerGridBottom);
+	if (solids.find(mapData[playerGridY][playerGridLeft]) != solids.end()) CollideLeft(playerGridLeft);
+	if (solids.find(mapData[playerGridY][playerGridRight]) != solids.end()) CollideRight(playerGridRight);
 }
 
 void Entity::Update(float elapsed)

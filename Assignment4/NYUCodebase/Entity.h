@@ -19,7 +19,7 @@ public:
 	void CollideRight(int tileX);
 	void CollideTop(int tileY);
 	void CollideBottom(int tileY);
-	void CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData);
+	void CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData, std::unordered_set<int> solids);
 
 	void Update(float elapsed);
 
