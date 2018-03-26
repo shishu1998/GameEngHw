@@ -28,10 +28,10 @@ void GameState::updateGameState(float elapsed) {
 	worldToTileCoordinates(player.Position.x, player.Position.y, &playerGridX, &playerGridY);
 	worldToTileCoordinates(player.Position.x - player.size.x /2, player.Position.y - player.size.y / 2, &playerGridLeft, &playerGridBottom);
 	worldToTileCoordinates(player.Position.x + player.size.x/2, player.Position.y + player.size.y / 2, &playerGridRight, &playerGridTop);
-	if (map.mapData[playerGridY][playerGridLeft] != 0) player.CollideLeft(playerGridLeft);
-	if (map.mapData[playerGridY][playerGridRight] != 0) player.CollideLeft(playerGridRight);
 	if (map.mapData[playerGridTop][playerGridX] != 0) player.CollideTop(playerGridTop);
 	if (map.mapData[playerGridBottom][playerGridX] != 0) player.CollideBottom(playerGridBottom);
+	if (map.mapData[playerGridY][playerGridLeft] != 0) player.CollideLeft(playerGridLeft);
+	if (map.mapData[playerGridY][playerGridRight] != 0) player.CollideRight(playerGridRight);
 	viewMatrix.Identity();
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
 }

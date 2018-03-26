@@ -32,6 +32,7 @@ void Entity::CollideLeft(int tileX) {
 		collidedLeft = true;
 		acceleration.x = 0;
 		velocity.x = 0;
+		Position.x += (worldX + tileSize) - (Position.x - size.x / 2) + 0.01*tileSize;
 	}
 }
 
@@ -41,6 +42,7 @@ void Entity::CollideRight(int tileX) {
 		collidedRight = true;
 		acceleration.x = 0;
 		velocity.x = 0;
+		Position.x -= (Position.x + size.x / 2 - worldX + 0.01*tileSize);
 	}
 }
 
