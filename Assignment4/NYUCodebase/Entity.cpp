@@ -10,6 +10,7 @@ void Entity::Render(ShaderProgram & Program, Matrix viewMatrix)
 {
 	Matrix modelMatrix;
 	modelMatrix.Translate(Position.x, Position.y, 0);
+	if (!forward) modelMatrix.Scale(-1.0, 1.0, 0);
 
 	Program.SetModelMatrix(modelMatrix);
 	Program.SetViewMatrix(viewMatrix);

@@ -21,9 +21,11 @@ void GameState::updateGameState(float elapsed) {
 		//Reverses the movement of NPCs if there is collision against tiles
 		if (entities[i].collidedLeft) {
 			entities[i].acceleration.x = 0.3;
+			entities[i].forward = false;
 		}
 		if (entities[i].collidedRight) {
 			entities[i].acceleration.x = -0.3;
+			entities[i].forward = true;
 		}
 	}
 	player.CollidesWithTile(map.mapData, solidTiles);
@@ -45,7 +47,7 @@ void GameState::PlaceEntity(std::string type, float x, float y)
 	}
 	else if (type == "Enemy") {
 		Entity enemy = Entity(x, y, createSheetSpriteBySpriteIndex(TextureID, 446, tileSize), Enemy, false);
-		enemy.acceleration.x = 0.3;
+		enemy.acceleration.x = -0.3;
 		entities.emplace_back(enemy);
 	}
 }

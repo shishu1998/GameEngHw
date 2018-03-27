@@ -37,4 +37,5 @@ public:
 	bool collidedBottom = false;
 	bool collidedLeft = false;
 	bool collidedRight = false;
+	bool forward = true;
 };

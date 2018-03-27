@@ -51,9 +51,11 @@ void init() {
 void processGameState(GameState& state) {
 	if (keys[SDL_SCANCODE_A]) {
 		state.player.acceleration.x = -0.2;
+		state.player.forward = false;
 	}
 	if (keys[SDL_SCANCODE_D]) {
 		state.player.acceleration.x = 0.2;
+		state.player.forward = true;
 	}
 	if (keys[SDL_SCANCODE_SPACE]) {
 		if(state.player.collidedBottom)	state.player.velocity.y = 0.4;
@@ -90,11 +92,11 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		while (elapsed >= FIXED_TIMESTEP) {
+			processGameState(state);
 			state.updateGameState(FIXED_TIMESTEP);
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;
-		processGameState(state);
 		state.Render(program);
 		SDL_GL_SwapWindow(displayWindow);
 	}
