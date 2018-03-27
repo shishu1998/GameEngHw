@@ -26,13 +26,6 @@ float elapsed = 0.0f;
 float accumulator = 0.0f;
 GameState state;
 
-void initEntities(GameState& state) {
-}
-
-void reset(GameState& state) {
-}
-
-
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
 	displayWindow = SDL_CreateWindow("My Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 960, 540, SDL_WINDOW_OPENGL);
@@ -59,13 +52,13 @@ void processGameState(GameState& state) {
 	if (keys[SDL_SCANCODE_A]) {
 		state.player.acceleration.x = -0.2;
 	}
-	else if (keys[SDL_SCANCODE_D]) {
+	if (keys[SDL_SCANCODE_D]) {
 		state.player.acceleration.x = 0.2;
 	}
-	else if (keys[SDL_SCANCODE_SPACE]) {
-		if(state.player.collidedBottom)	state.player.velocity.y = 0.3;
+	if (keys[SDL_SCANCODE_SPACE]) {
+		if(state.player.collidedBottom)	state.player.velocity.y = 0.4;
 	}
-	else {
+	if(!(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D] || keys[SDL_SCANCODE_SPACE])) {
 		state.player.acceleration.x = 0.0;
 		state.player.acceleration.y = 0.0;
 	}
@@ -73,14 +66,6 @@ void processGameState(GameState& state) {
 
 void updateGameState(GameState& state, float elapsed) {
 	state.updateGameState(elapsed);
-}
-
-void renderGame(GameState& state) {
-}
-
-
-void PlaceEntity(std::string type, float x, float y) {
-	
 }
 
 int main(int argc, char *argv[])
@@ -105,7 +90,7 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		while (elapsed >= FIXED_TIMESTEP) {
-			updateGameState(state,FIXED_TIMESTEP);
+			state.updateGameState(FIXED_TIMESTEP);
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;

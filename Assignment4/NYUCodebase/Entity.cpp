@@ -17,15 +17,18 @@ void Entity::Render(ShaderProgram & Program, Matrix viewMatrix)
 	sprite.Draw(&Program);
 }
 
+//Resets contact flags
 void Entity::ResetContactFlags() {
 	collidedLeft = collidedRight = collidedTop = collidedBottom = false;
 }
 
+//Checks collision with another entity
 bool Entity::CollidesWith(const Entity& Other)
 {
 	return !(Position.y - size.y / 2 > Other.Position.y + Other.size.y / 2 || Position.y + size.y / 2 < Other.Position.y - Other.size.y / 2 || Position.x - size.x / 2 > Other.Position.x + Other.size.x / 2 || Position.x + size.x / 2 < Other.Position.x - Other.size.x / 2);
 }
 
+//Checks if the center of the left side is colliding with the tile to the left
 void Entity::CollideLeft(int tileX) {
 	float worldX = tileX * tileSize;
 	if (Position.x - size.x / 2 < worldX + tileSize) {
@@ -36,6 +39,7 @@ void Entity::CollideLeft(int tileX) {
 	}
 }
 
+//Checks if the center of the right side is colliding with the tile to the right
 void Entity::CollideRight(int tileX) {
 	float worldX = tileX * tileSize;
 	if (Position.x + size.x / 2 > worldX) {
@@ -46,6 +50,7 @@ void Entity::CollideRight(int tileX) {
 	}
 }
 
+//Checks if the center of the top side is colliding with the tile to the top
 void Entity::CollideTop(int tileY) {
 	float worldY = tileY * -tileSize;
 	if (Position.y + size.y / 2 > worldY - tileSize) {
@@ -55,6 +60,8 @@ void Entity::CollideTop(int tileY) {
 		Position.y -= ((Position.y + size.y / 2) - (worldY - tileSize) + tileSize * 0.01);
 	}
 }
+
+//Checks if the center of the bottom side is colliding with the tile to the bottom
 void Entity::CollideBottom(int tileY) {
 	float worldY = tileY * -tileSize;
 	if (Position.y - size.y / 2 < worldY) {
@@ -65,6 +72,7 @@ void Entity::CollideBottom(int tileY) {
 	}
 }
 
+//Checks if the current entity is colliding with tiles to any side
 void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData, std::unordered_set<int> solids)
 {
 	int playerGridX, playerGridY, playerGridLeft, playerGridRight, playerGridTop, playerGridBottom;
@@ -77,6 +85,7 @@ void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapD
 	if (solids.find(mapData[playerGridY][playerGridRight]) != solids.end()) CollideRight(playerGridRight);
 }
 
+//Updates the position of current entity
 void Entity::Update(float elapsed)
 {
 	ResetContactFlags();
@@ -84,7 +93,5 @@ void Entity::Update(float elapsed)
 	velocity.x += acceleration.x * elapsed;
 	velocity.y += GRAVITY * elapsed;
 	Position.y += velocity.y * elapsed;
-	//collisionY();
 	Position.x += velocity.x * elapsed;
-	//collisionX();
 }

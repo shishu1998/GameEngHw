@@ -12,20 +12,13 @@ void GameState::loadResources() {
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
 }
 
-//Initializes the Entities stored in the state
-void GameState::initEntities() {
-}
-
-//Clear everything in the GameState and remake them, except the player, for the player simply set health = 3
-void GameState::reset() {
-}
-
 //Updates the GameState based on the time elapsed
 void GameState::updateGameState(float elapsed) {
 	player.Update(elapsed);
 	for (int i = 0; i < entities.size(); ++i) {
 		entities[i].Update(elapsed);
 		entities[i].CollidesWithTile(map.mapData, solidTiles);
+		//Reverses the movement of NPCs if there is collision against tiles
 		if (entities[i].collidedLeft) {
 			entities[i].acceleration.x = 0.3;
 		}
@@ -34,14 +27,17 @@ void GameState::updateGameState(float elapsed) {
 		}
 	}
 	player.CollidesWithTile(map.mapData, solidTiles);
+	//Player jumps when touches an enemy
 	for (int i = 0; i < entities.size(); ++i) {
 		if (player.CollidesWith(entities[i])) 
-			player.velocity.y = 0.6;
+			player.velocity.y = 0.8;
 	}
+	//Translate the view matrix by the player's position
 	viewMatrix.Identity();
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
 }
 
+//Creates entities based on the string type
 void GameState::PlaceEntity(std::string type, float x, float y)
 {
 	if (type == "Player") {
@@ -54,6 +50,7 @@ void GameState::PlaceEntity(std::string type, float x, float y)
 	}
 }
 
+//Draws the game state (tilemap and entities)
 void GameState::Render(ShaderProgram & program)
 {
 	DrawLevel(program, TextureID, map, viewMatrix, 0.0, 0.0);

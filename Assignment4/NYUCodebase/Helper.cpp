@@ -68,7 +68,7 @@ void DrawMessage(ShaderProgram& program, int TextureID, std::string text, float 
 	DrawText(&program, TextureID, text, size, space);
 }
 
-//Draw the level starting from an x,y coordinate
+//Draw the level starting from an x,y coordinate using a FlareMap, takes in a viewMatrix for a view
 void DrawLevel(ShaderProgram & program, int textureID, FlareMap map, Matrix viewMatrix, float pos_x, float pos_y)
 {
 	Matrix modelMatrix;
