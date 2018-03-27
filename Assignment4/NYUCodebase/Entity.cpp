@@ -76,14 +76,14 @@ void Entity::CollideBottom(int tileY) {
 //Checks if the current entity is colliding with tiles to any side
 void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData, std::unordered_set<int> solids)
 {
-	int playerGridX, playerGridY, playerGridLeft, playerGridRight, playerGridTop, playerGridBottom;
-	worldToTileCoordinates(Position.x, Position.y, &playerGridX, &playerGridY);
-	worldToTileCoordinates(Position.x - size.x / 2, Position.y - size.y / 2, &playerGridLeft, &playerGridBottom);
-	worldToTileCoordinates(Position.x + size.x / 2, Position.y + size.y / 2, &playerGridRight, &playerGridTop);
-	if (solids.find(mapData[playerGridTop][playerGridX]) != solids.end()) CollideTop(playerGridTop);
-	if (solids.find(mapData[playerGridBottom][playerGridX]) != solids.end()) CollideBottom(playerGridBottom);
-	if (solids.find(mapData[playerGridY][playerGridLeft]) != solids.end()) CollideLeft(playerGridLeft);
-	if (solids.find(mapData[playerGridY][playerGridRight]) != solids.end()) CollideRight(playerGridRight);
+	int gridX, gridY, gridLeft, gridRight, gridTop, gridBottom;
+	worldToTileCoordinates(Position.x, Position.y, &gridX, &gridY);
+	worldToTileCoordinates(Position.x - size.x / 2, Position.y - size.y / 2, &gridLeft, &gridBottom);
+	worldToTileCoordinates(Position.x + size.x / 2, Position.y + size.y / 2, &gridRight, &gridTop);
+	if (solids.find(mapData[gridTop][gridX]) != solids.end()) CollideTop(gridTop);
+	if (solids.find(mapData[gridBottom][gridX]) != solids.end()) CollideBottom(gridBottom);
+	if (solids.find(mapData[gridY][gridLeft]) != solids.end()) CollideLeft(gridLeft);
+	if (solids.find(mapData[gridY][gridRight]) != solids.end()) CollideRight(gridRight);
 }
 
 //Updates the position of current entity
