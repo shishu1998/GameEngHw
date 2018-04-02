@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
 				done = true;
 			}
 		}
+		processGameState(state);
 		float ticks = (float)SDL_GetTicks() / 1000.0f;
 		elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
@@ -92,7 +93,6 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		while (elapsed >= FIXED_TIMESTEP) {
-			processGameState(state);
 			state.updateGameState(FIXED_TIMESTEP);
 			elapsed -= FIXED_TIMESTEP;
 		}
