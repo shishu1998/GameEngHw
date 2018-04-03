@@ -1,4 +1,4 @@
-
+#include "Vector4.h"
 #pragma once
 
 class Matrix {
@@ -13,6 +13,7 @@ class Matrix {
     
         void Identity();
         Matrix operator * (const Matrix &m2) const;
+		Vector4 operator * (const Vector4 &other) const;
         Matrix Inverse() const;
     
         void Translate(float x, float y, float z);
