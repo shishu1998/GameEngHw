@@ -136,6 +136,7 @@ void Entity::Rotate(float angle) {
 	Rotation += angle;
 }
 
+//Gets the corners of the entity
 std::vector<std::pair<float, float>> Entity::getCorners() const {
 	std::vector<std::pair<float, float>> vertices = std::vector<std::pair<float, float>>();
 	Vector4 topLeft = matrix * Vector4(-size.x / 2, size.y / 2, 0);
@@ -149,6 +150,7 @@ std::vector<std::pair<float, float>> Entity::getCorners() const {
 	return vertices;
 }
 
+//SAT Collision code
 bool Entity::SATCollidesWith(Entity& Other) {
 	std::pair<float, float> penetration;
 	bool collided = CheckSATCollision(getCorners(), Other.getCorners(), penetration);

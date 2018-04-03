@@ -41,7 +41,7 @@ void EntitySetup() {
 	one.Rotate(M_PI / 4);
 	two = Entity(1.0, 0.5, 1.0, 0.5);
 	two.velocity = Vector4(-0.1, -0.1, 0);
-	two.Rotate(7*M_PI / 4);
+	two.Rotate(5*M_PI/4);
 	three = Entity(0, 1.0, 0.25, 0.25);
 	three.velocity = Vector4(0.1, -0.1, 0);
 }
@@ -55,20 +55,34 @@ void RenderEntities() {
 	three.Render(untexturedProgram, viewMatrix);
 }
 
+void SetRandomVelocity(Entity& entity) {
+	entity.velocity.x = ((float)rand() / RAND_MAX - 0.5);
+	entity.velocity.y = (float)rand() / RAND_MAX - 0.5;
+}
+
 void UpdateEntities(float elapsed) {
 	for (int i = 0; i < staticEntities.size(); ++i) {
 		if (one.SATCollidesWith(staticEntities[i])) {
-			one.velocity.x *= -1;
-			one.velocity.y *= -1;
+			SetRandomVelocity(one);
 		}
 		if (two.SATCollidesWith(staticEntities[i])) {
-			two.velocity.x *= -1;
-			two.velocity.y *= -1;
+			SetRandomVelocity(two);
 		}
 		if (three.SATCollidesWith(staticEntities[i])) {
-			three.velocity.x *= -1;
-			three.velocity.y *= -1;
+			SetRandomVelocity(three);
 		}
+	}
+	if (one.SATCollidesWith(two)) {
+		SetRandomVelocity(one);
+		SetRandomVelocity(two);
+	}
+	if (one.SATCollidesWith(three)) {
+		SetRandomVelocity(one);
+		SetRandomVelocity(three);
+	}
+	if (two.SATCollidesWith(three)) {
+		SetRandomVelocity(two);
+		SetRandomVelocity(three);
 	}
 	one.Update(elapsed);
 	two.Update(elapsed);
@@ -96,6 +110,7 @@ void init() {
 	untexturedProgram.SetProjectionMatrix(projectionMatrix);
 
 	EntitySetup();
+	srand(SDL_GetTicks());
 
 	glUseProgram(program.programID);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
