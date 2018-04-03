@@ -37,13 +37,13 @@ void EntitySetup() {
 	staticEntities.emplace_back(0, 2.0, 7.1, 0.1);
 	staticEntities.emplace_back(0, -2.0, 7.1, 0.1);
 	one = Entity(-1.0, 0, 0.5, 1.0);
-	one.velocity = Vector4(0.001, 0.001,0);
+	one.velocity = Vector4(-0.1, 0.0,0);
 	one.Rotate(M_PI / 4);
 	two = Entity(1.0, 0.5, 1.0, 0.5);
-	two.velocity = Vector4(-0.001, -0.001, 0);
+	two.velocity = Vector4(-0.1, -0.1, 0);
 	two.Rotate(7*M_PI / 4);
 	three = Entity(0, 1.0, 0.25, 0.25);
-	three.velocity = Vector4(0.001, -0.001, 0);
+	three.velocity = Vector4(0.1, -0.1, 0);
 }
 
 void RenderEntities() {
@@ -56,7 +56,14 @@ void RenderEntities() {
 }
 
 void UpdateEntities(float elapsed) {
-
+	for (int i = 0; i < staticEntities.size(); ++i) {
+		if (one.SATCollidesWith(staticEntities[i])) {
+			auto a = one.getCorners();
+			one.velocity.x *= -1;
+			one.velocity.y *= -1;
+		}
+	}
+	one.Update(elapsed);
 }
 
 #pragma endregion
@@ -130,6 +137,7 @@ int main(int argc, char *argv[])
 		elapsed += accumulator;
 		if (elapsed < FIXED_TIMESTEP) {
 			accumulator = elapsed;
+			UpdateEntities(FIXED_TIMESTEP);
 			continue;
 		}
 		while (elapsed >= FIXED_TIMESTEP) {
