@@ -1,12 +1,13 @@
 #include "Entity.h"
 #include "Helper.h"
+#include "SatCollision.h"
 
-Entity::Entity() {}
-Entity::Entity(float x, float y, float width, float height) : Position(x, y, 0), size(width, height, 0) {
+Entity::Entity() : textured(false) {}
+Entity::Entity(float x, float y, float width, float height) : Position(x, y, 0), size(width, height, 0), textured(false) {
 	matrix.Translate(Position.x, Position.y, 0);
 }
 Entity::Entity(float x, float y, SheetSprite sprite, EntityType type, bool isStatic) : Position(x,y,0), 
-size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite), entityType(type), isStatic(isStatic) {
+size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite), entityType(type), isStatic(isStatic), textured(true) {
 	matrix.Translate(Position.x, Position.y, 0);
 }
 
@@ -36,7 +37,7 @@ void Entity::Render(ShaderProgram & Program, Matrix viewMatrix)
 	Program.SetModelMatrix(modelMatrix);
 	Program.SetViewMatrix(viewMatrix);
 
-	sprite.textureID ? sprite.Draw(&Program) : UntexturedDraw(Program);
+	textured ? sprite.Draw(&Program) : UntexturedDraw(Program);
 }
 
 //Resets contact flags
@@ -126,5 +127,34 @@ void Entity::Update(float elapsed)
 	float displacementY = velocity.y * elapsed;
 	Position.y += displacementY;
 	Position.x += displacementX;
-	matrix.Translate(displacementX, displacementY,0);
+	matrix.Identity();
+	matrix.Translate(Position.x, Position.y, Position.z);
+	matrix.Rotate(Rotation);
+}
+
+void Entity::Rotate(float angle) {
+	Rotation += angle;
+}
+
+std::vector<std::pair<float, float>> Entity::getCorners() const {
+	std::vector<std::pair<float, float>> vertices = std::vector<std::pair<float, float>>();
+	Vector4 topLeft = matrix * Vector4(Position.x - size.x / 2, Position.y + size.y / 2, 0);
+	Vector4 topRight = matrix * Vector4(Position.x + size.x / 2, Position.y + size.y / 2, 0);
+	Vector4 botLeft = matrix * Vector4(Position.x - size.x / 2, Position.y - size.y / 2, 0);
+	Vector4 botRight = matrix * Vector4(Position.x + size.x / 2, Position.y - size.y / 2, 0);
+	vertices.emplace_back(topLeft.x, topLeft.y);
+	vertices.emplace_back(topRight.x, topRight.y);
+	vertices.emplace_back(botLeft.x, botLeft.y);
+	vertices.emplace_back(botRight.x, botRight.y);
+	return vertices;
+}
+
+bool Entity::SATCollidesWith(Entity& Other) {
+	std::pair<float, float> penetration;
+	bool collided = CheckSATCollision(getCorners(), Other.getCorners(), penetration);
+	Position.x += (penetration.first * 0.5f);
+	Position.y += (penetration.second * 0.5f);
+	Other.Position.x -= (penetration.first * 0.5f);
+	Other.Position.y -= (penetration.second * 0.5f);
+	return collided;
 }

@@ -4,8 +4,8 @@
 #include "helper.h"
 #include "SheetSprite.h"
 #include "Vector4.h"
-#define Friction_X 0.2f
-#define GRAVITY -0.2f
+#define Friction_X 0.0f
+#define GRAVITY 0.0f
 
 enum EntityType {Player, Enemy};
 class Entity {
@@ -24,6 +24,10 @@ public:
 	void CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData, std::unordered_set<int> solids);
 
 	void Update(float elapsed);
+	void Rotate(float angle);
+
+	std::vector<std::pair<float, float>> getCorners() const;
+	bool SATCollidesWith(Entity& Other);
 
 	SheetSprite sprite;
 
@@ -31,8 +35,10 @@ public:
 	Vector4 size;
 	Vector4 velocity;
 	Vector4 acceleration;
+	float Rotation = 0;
 
 	bool isStatic;
+	bool textured;
 	EntityType entityType;
 	
 	bool collidedTop = false;

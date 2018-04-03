@@ -20,12 +20,46 @@ SDL_Window* displayWindow;
 ShaderProgram program;
 ShaderProgram untexturedProgram;
 Matrix projectionMatrix;
+Matrix viewMatrix;
 const Uint8 *keys = SDL_GetKeyboardState(nullptr);
 int fontTextureID;
 float lastFrameTicks = 0.0f;
 float elapsed = 0.0f;
 float accumulator = 0.0f;
 GameState state;
+std::vector<Entity> staticEntities;
+Entity one, two, three;
+
+#pragma region "Assignment 5 Code"
+void EntitySetup() {
+	staticEntities.emplace_back(-3.55, 0, 0.1, 4.0);
+	staticEntities.emplace_back(3.55, 0, 0.1, 4.0);
+	staticEntities.emplace_back(0, 2.0, 7.1, 0.1);
+	staticEntities.emplace_back(0, -2.0, 7.1, 0.1);
+	one = Entity(-1.0, 0, 0.5, 1.0);
+	one.velocity = Vector4(0.001, 0.001,0);
+	one.Rotate(M_PI / 4);
+	two = Entity(1.0, 0.5, 1.0, 0.5);
+	two.velocity = Vector4(-0.001, -0.001, 0);
+	two.Rotate(7*M_PI / 4);
+	three = Entity(0, 1.0, 0.25, 0.25);
+	three.velocity = Vector4(0.001, -0.001, 0);
+}
+
+void RenderEntities() {
+	for (int i = 0; i < staticEntities.size(); ++i) {
+		staticEntities[i].Render(untexturedProgram, viewMatrix);
+	}
+	one.Render(untexturedProgram, viewMatrix);
+	two.Render(untexturedProgram, viewMatrix);
+	three.Render(untexturedProgram, viewMatrix);
+}
+
+void UpdateEntities(float elapsed) {
+
+}
+
+#pragma endregion
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -44,6 +78,9 @@ void init() {
 	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
 	program.SetProjectionMatrix(projectionMatrix);
 	untexturedProgram.SetProjectionMatrix(projectionMatrix);
+
+	EntitySetup();
+
 	glUseProgram(program.programID);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
@@ -77,6 +114,7 @@ int main(int argc, char *argv[])
 	init();
 	SDL_Event event;
 	bool done = false;
+	untexturedProgram.SetColor(1.0, 0.0, 0, 1);
 	while (!done) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		while (SDL_PollEvent(&event)) {
@@ -84,7 +122,7 @@ int main(int argc, char *argv[])
 				done = true;
 			}
 		}
-		processGameState(state);
+
 		float ticks = (float)SDL_GetTicks() / 1000.0f;
 		elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
@@ -95,11 +133,10 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		while (elapsed >= FIXED_TIMESTEP) {
-			state.updateGameState(FIXED_TIMESTEP);
 			elapsed -= FIXED_TIMESTEP;
 		}
+		RenderEntities();
 		accumulator = elapsed;
-		state.Render(program);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 
