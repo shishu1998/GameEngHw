@@ -3,7 +3,7 @@
 #include "SatCollision.h"
 
 Entity::Entity() : textured(false) {}
-Entity::Entity(float x, float y, float width, float height) : Position(x, y, 0), size(width, height, 0), textured(false) {
+Entity::Entity(float x, float y, float width, float height, bool isStatic) : Position(x, y, 0), size(width, height, 0), isStatic(isStatic),textured(false) {
 	matrix.Translate(Position.x, Position.y, 0);
 }
 Entity::Entity(float x, float y, SheetSprite sprite, EntityType type, bool isStatic) : Position(x,y,0), 
@@ -120,13 +120,15 @@ void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapD
 void Entity::Update(float elapsed)
 {
 	ResetContactFlags();
-	velocity.x = lerp(velocity.x, 0.0f, elapsed * Friction_X);
-	velocity.x += acceleration.x * elapsed;
-	velocity.y += GRAVITY * elapsed;
-	float displacementX = velocity.x * elapsed;
-	float displacementY = velocity.y * elapsed;
-	Position.y += displacementY;
-	Position.x += displacementX;
+	if (!isStatic) {
+		velocity.x = lerp(velocity.x, 0.0f, elapsed * Friction_X);
+		velocity.x += acceleration.x * elapsed;
+		velocity.y += GRAVITY * elapsed;
+		float displacementX = velocity.x * elapsed;
+		float displacementY = velocity.y * elapsed;
+		Position.y += displacementY;
+		Position.x += displacementX;
+	}
 	matrix.Identity();
 	matrix.Translate(Position.x, Position.y, Position.z);
 	matrix.Rotate(Rotation);
@@ -155,9 +157,15 @@ std::vector<std::pair<float, float>> Entity::getCorners() const {
 bool Entity::SATCollidesWith(Entity& Other) {
 	std::pair<float, float> penetration;
 	bool collided = CheckSATCollision(getCorners(), Other.getCorners(), penetration);
-	Position.x += (penetration.first * 0.5f);
-	Position.y += (penetration.second * 0.5f);
-	Other.Position.x -= (penetration.first * 0.5f);
-	Other.Position.y -= (penetration.second * 0.5f);
+	if (Other.isStatic) {
+		Position.x += penetration.first;
+		Position.y += penetration.second;
+	}
+	else {
+		Position.x += (penetration.first * 0.5f);
+		Position.y += (penetration.second * 0.5f);
+		Other.Position.x -= (penetration.first * 0.5f);
+		Other.Position.y -= (penetration.second * 0.5f);
+	}
 	return collided;
 }

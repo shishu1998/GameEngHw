@@ -11,7 +11,7 @@ enum EntityType {Player, Enemy};
 class Entity {
 public:
 	Entity();
-	Entity(float x, float y, float width, float height);
+	Entity(float x, float y, float width, float height, bool isStatic);
 	Entity(float x, float y, SheetSprite sprite, EntityType type, bool isStatic);
 	void UntexturedDraw(ShaderProgram & Program);
 	void Render(ShaderProgram &Program, Matrix viewMatrix);

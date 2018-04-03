@@ -32,17 +32,17 @@ Entity one, two, three;
 
 #pragma region "Assignment 5 Code"
 void EntitySetup() {
-	staticEntities.emplace_back(-3.55, 0, 0.1, 4.0);
-	staticEntities.emplace_back(3.55, 0, 0.1, 4.0);
-	staticEntities.emplace_back(0, 2.0, 7.1, 0.1);
-	staticEntities.emplace_back(0, -2.0, 7.1, 0.1);
-	one = Entity(-1.0, 0, 0.5, 1.0);
+	staticEntities.emplace_back(-3.55, 0, 0.1, 4.0, true);
+	staticEntities.emplace_back(3.55, 0, 0.1, 4.0, true);
+	staticEntities.emplace_back(0, 2.0, 7.1, 0.1, true);
+	staticEntities.emplace_back(0, -2.0, 7.1, 0.1, true);
+	one = Entity(-1.0, 0, 0.5, 1.0, false);
 	one.velocity = Vector4(-0.1, 0.1,0);
 	one.Rotate(M_PI / 4);
-	two = Entity(1.0, 0.5, 1.0, 0.5);
+	two = Entity(1.0, 0.5, 1.0, 0.5, false);
 	two.velocity = Vector4(-0.1, -0.1, 0);
 	two.Rotate(5*M_PI/4);
-	three = Entity(0, 1.0, 0.25, 0.25);
+	three = Entity(0, 1.0, 0.25, 0.25, false);
 	three.velocity = Vector4(0.1, -0.1, 0);
 }
 
