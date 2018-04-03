@@ -138,10 +138,10 @@ void Entity::Rotate(float angle) {
 
 std::vector<std::pair<float, float>> Entity::getCorners() const {
 	std::vector<std::pair<float, float>> vertices = std::vector<std::pair<float, float>>();
-	Vector4 topLeft = matrix * Vector4(Position.x - size.x / 2, Position.y + size.y / 2, 0);
-	Vector4 topRight = matrix * Vector4(Position.x + size.x / 2, Position.y + size.y / 2, 0);
-	Vector4 botLeft = matrix * Vector4(Position.x - size.x / 2, Position.y - size.y / 2, 0);
-	Vector4 botRight = matrix * Vector4(Position.x + size.x / 2, Position.y - size.y / 2, 0);
+	Vector4 topLeft = matrix * Vector4(-size.x / 2, size.y / 2, 0);
+	Vector4 topRight = matrix * Vector4(size.x / 2, size.y / 2, 0);
+	Vector4 botLeft = matrix * Vector4(-size.x / 2, -size.y / 2, 0);
+	Vector4 botRight = matrix * Vector4(size.x / 2, -size.y / 2, 0);
 	vertices.emplace_back(topLeft.x, topLeft.y);
 	vertices.emplace_back(topRight.x, topRight.y);
 	vertices.emplace_back(botLeft.x, botLeft.y);

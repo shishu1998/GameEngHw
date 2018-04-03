@@ -37,7 +37,7 @@ void EntitySetup() {
 	staticEntities.emplace_back(0, 2.0, 7.1, 0.1);
 	staticEntities.emplace_back(0, -2.0, 7.1, 0.1);
 	one = Entity(-1.0, 0, 0.5, 1.0);
-	one.velocity = Vector4(-0.1, 0.0,0);
+	one.velocity = Vector4(-0.1, 0.1,0);
 	one.Rotate(M_PI / 4);
 	two = Entity(1.0, 0.5, 1.0, 0.5);
 	two.velocity = Vector4(-0.1, -0.1, 0);
@@ -58,12 +58,21 @@ void RenderEntities() {
 void UpdateEntities(float elapsed) {
 	for (int i = 0; i < staticEntities.size(); ++i) {
 		if (one.SATCollidesWith(staticEntities[i])) {
-			auto a = one.getCorners();
 			one.velocity.x *= -1;
 			one.velocity.y *= -1;
 		}
+		if (two.SATCollidesWith(staticEntities[i])) {
+			two.velocity.x *= -1;
+			two.velocity.y *= -1;
+		}
+		if (three.SATCollidesWith(staticEntities[i])) {
+			three.velocity.x *= -1;
+			three.velocity.y *= -1;
+		}
 	}
 	one.Update(elapsed);
+	two.Update(elapsed);
+	three.Update(elapsed);
 }
 
 #pragma endregion
