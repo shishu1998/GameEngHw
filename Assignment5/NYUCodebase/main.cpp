@@ -84,6 +84,9 @@ void UpdateEntities(float elapsed) {
 		SetRandomVelocity(two);
 		SetRandomVelocity(three);
 	}
+	for (int i = 0; i < staticEntities.size(); ++i) {
+		staticEntities[i].Update(elapsed);
+	}
 	one.Update(elapsed);
 	two.Update(elapsed);
 	three.Update(elapsed);
