@@ -57,7 +57,9 @@ void Entity::CollideLeft(int tileX) {
 		collidedLeft = true;
 		acceleration.x = 0;
 		velocity.x = 0;
-		Position.x += (worldX + tileSize) - (Position.x - size.x / 2) + 0.01*tileSize;
+		float leftPen = (worldX + tileSize) - (Position.x - size.x / 2) + 0.01*tileSize;
+		Position.x += leftPen;
+		matrix.Translate(leftPen, 0, 0);
 	}
 }
 
@@ -68,7 +70,9 @@ void Entity::CollideRight(int tileX) {
 		collidedRight = true;
 		acceleration.x = 0;
 		velocity.x = 0;
-		Position.x -= (Position.x + size.x / 2 - worldX + 0.01*tileSize);
+		float rightPen = (Position.x + size.x / 2 - worldX + 0.01*tileSize);
+		Position.x -= rightPen;
+		matrix.Translate(-rightPen,0,0);
 	}
 }
 
@@ -79,7 +83,9 @@ void Entity::CollideTop(int tileY) {
 		collidedTop = true;
 		acceleration.y = 0;
 		velocity.y = 0;
-		Position.y -= ((Position.y + size.y / 2) - (worldY - tileSize) + tileSize * 0.01);
+		float topPen = ((Position.y + size.y / 2) - (worldY - tileSize) + tileSize * 0.01);
+		Position.y -= topPen;
+		matrix.Translate(0, -topPen, 0);
 	}
 }
 
@@ -90,7 +96,9 @@ void Entity::CollideBottom(int tileY) {
 		collidedBottom = true;
 		acceleration.y = 0;
 		velocity.y = 0;
-		Position.y += (worldY - (Position.y - size.y / 2)) + tileSize * 0.01;
+		float botPen = (worldY - (Position.y - size.y / 2)) + tileSize * 0.01;
+		Position.y += botPen;
+		matrix.Translate(0, botPen, 0);
 	}
 }
 
