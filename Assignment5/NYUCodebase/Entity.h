@@ -11,7 +11,9 @@ enum EntityType {Player, Enemy};
 class Entity {
 public:
 	Entity();
+	Entity(float x, float y, float width, float height);
 	Entity(float x, float y, SheetSprite sprite, EntityType type, bool isStatic);
+	void UntexturedDraw(ShaderProgram & Program);
 	void Render(ShaderProgram &Program, Matrix viewMatrix);
 	void ResetContactFlags();
 	bool CollidesWith(const Entity& Other);
@@ -38,4 +40,6 @@ public:
 	bool collidedLeft = false;
 	bool collidedRight = false;
 	bool forward = true;
+
+	Matrix matrix;
 };

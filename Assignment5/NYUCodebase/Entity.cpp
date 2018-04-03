@@ -2,20 +2,41 @@
 #include "Helper.h"
 
 Entity::Entity() {}
+Entity::Entity(float x, float y, float width, float height) : Position(x, y, 0), size(width, height, 0) {
+	matrix.Translate(Position.x, Position.y, 0);
+}
 Entity::Entity(float x, float y, SheetSprite sprite, EntityType type, bool isStatic) : Position(x,y,0), 
 size(sprite.width * sprite.size/ sprite.height, sprite.size, 0), sprite(sprite), entityType(type), isStatic(isStatic) {
+	matrix.Translate(Position.x, Position.y, 0);
+}
+
+void Entity::UntexturedDraw(ShaderProgram & Program) {
+	glUseProgram(Program.programID);
+	float vertices[] = {
+		-0.5f * size.x, -0.5f * size.y,
+		0.5f * size.x, 0.5f * size.y,
+		-0.5f * size.x, 0.5f * size.y,
+		0.5f * size.x, 0.5f * size.y,
+		-0.5f * size.x, -0.5f * size.y ,
+		0.5f * size.x, -0.5f * size.y };
+
+	glVertexAttribPointer(Program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+	glEnableVertexAttribArray(Program.positionAttribute);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(Program.positionAttribute);
 }
 
 void Entity::Render(ShaderProgram & Program, Matrix viewMatrix)
 {
-	Matrix modelMatrix;
-	modelMatrix.Translate(Position.x, Position.y, 0);
+	Matrix modelMatrix = matrix;
 	if (!forward) modelMatrix.Scale(-1.0, 1.0, 0);
 
 	Program.SetModelMatrix(modelMatrix);
 	Program.SetViewMatrix(viewMatrix);
 
-	sprite.Draw(&Program);
+	sprite.textureID ? sprite.Draw(&Program) : UntexturedDraw(Program);
 }
 
 //Resets contact flags
@@ -93,6 +114,9 @@ void Entity::Update(float elapsed)
 	velocity.x = lerp(velocity.x, 0.0f, elapsed * Friction_X);
 	velocity.x += acceleration.x * elapsed;
 	velocity.y += GRAVITY * elapsed;
-	Position.y += velocity.y * elapsed;
-	Position.x += velocity.x * elapsed;
+	float displacementX = velocity.x * elapsed;
+	float displacementY = velocity.y * elapsed;
+	Position.y += displacementY;
+	Position.x += displacementX;
+	matrix.Translate(displacementX, displacementY,0);
 }

@@ -2,8 +2,8 @@
 #include "Entity.h"
 #include "FlareMap.h"
 #include <vector>
-#define levelFILE ""
-#define Solids {}
+#define levelFILE "Alien.txt"
+#define Solids {61,62,68,92,94,490,579}
 
 class GameState {
 public:

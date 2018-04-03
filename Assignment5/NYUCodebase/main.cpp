@@ -18,6 +18,7 @@
 
 SDL_Window* displayWindow;
 ShaderProgram program;
+ShaderProgram untexturedProgram;
 Matrix projectionMatrix;
 const Uint8 *keys = SDL_GetKeyboardState(nullptr);
 int fontTextureID;
@@ -36,14 +37,17 @@ void init() {
 #endif
 
 	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
-
+	untexturedProgram.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
 	glViewport(0, 0, 960, 540);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	projectionMatrix.SetOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
 	program.SetProjectionMatrix(projectionMatrix);
+	untexturedProgram.SetProjectionMatrix(projectionMatrix);
 	glUseProgram(program.programID);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
+
+	state.loadResources();
 }
 
 void processGameState(GameState& state) {
@@ -80,6 +84,7 @@ int main(int argc, char *argv[])
 				done = true;
 			}
 		}
+		processGameState(state);
 		float ticks = (float)SDL_GetTicks() / 1000.0f;
 		elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
@@ -90,9 +95,11 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		while (elapsed >= FIXED_TIMESTEP) {
+			state.updateGameState(FIXED_TIMESTEP);
 			elapsed -= FIXED_TIMESTEP;
 		}
 		accumulator = elapsed;
+		state.Render(program);
 		SDL_GL_SwapWindow(displayWindow);
 	}
 

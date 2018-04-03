@@ -8,7 +8,7 @@ public:
 		size);
 	void Draw(ShaderProgram *program);
 	float size;
-	unsigned int textureID;
+	unsigned int textureID = 0;
 	float u;
 	float v;
 	float width;
