@@ -112,6 +112,13 @@ void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapD
 	if (solids.find(mapData[gridY][gridRight]) != solids.end()) CollideRight(gridRight);
 }
 
+void Entity::remakeMatrix() {
+	matrix.Identity();
+	matrix.Translate(Position.x, Position.y, Position.z);
+	matrix.Rotate(Rotation);
+	matrix.Scale(size.x, size.y, size.z);
+}
+
 //Updates the position of current entity
 void Entity::Update(float elapsed)
 {
@@ -125,10 +132,7 @@ void Entity::Update(float elapsed)
 		Position.y += displacementY;
 		Position.x += displacementX;
 	}
-	matrix.Identity();
-	matrix.Translate(Position.x, Position.y, Position.z);
-	matrix.Rotate(Rotation);
-	matrix.Scale(size.x, size.y, size.z);
+	remakeMatrix();
 }
 
 void Entity::Rotate(float angle) {
@@ -163,5 +167,6 @@ bool Entity::SATCollidesWith(Entity& Other) {
 		Other.Position.x -= (penetration.first * 0.5f);
 		Other.Position.y -= (penetration.second * 0.5f);
 	}
+	remakeMatrix();
 	return collided;
 }

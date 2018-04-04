@@ -57,8 +57,8 @@ void RenderEntities() {
 }
 
 void SetRandomVelocity(Entity& entity) {
-	entity.velocity.x = ((float)rand() / RAND_MAX - 0.5);
-	entity.velocity.y = (float)rand() / RAND_MAX - 0.5;
+	entity.velocity.x = ((float)rand() / RAND_MAX)/5  - 0.1;
+	entity.velocity.y = ((float)rand() / RAND_MAX)/5 - 0.1;
 }
 
 void UpdateEntities(float elapsed) {

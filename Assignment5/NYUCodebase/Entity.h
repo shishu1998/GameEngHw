@@ -27,6 +27,7 @@ public:
 	void Rotate(float angle);
 
 	std::vector<std::pair<float, float>> getCorners() const;
+	void remakeMatrix();
 	bool SATCollidesWith(Entity& Other);
 
 	SheetSprite sprite;
