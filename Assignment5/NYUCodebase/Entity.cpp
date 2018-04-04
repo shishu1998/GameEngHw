@@ -148,8 +148,8 @@ std::vector<std::pair<float, float>> Entity::getCorners() const {
 	Vector4 botRight = matrix * Vector4(0.5, -0.5, 0);
 	vertices.emplace_back(topLeft.x, topLeft.y);
 	vertices.emplace_back(topRight.x, topRight.y);
-	vertices.emplace_back(botLeft.x, botLeft.y);
 	vertices.emplace_back(botRight.x, botRight.y);
+	vertices.emplace_back(botLeft.x, botLeft.y);
 	return vertices;
 }
 
