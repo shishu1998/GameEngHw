@@ -44,6 +44,7 @@ void EntitySetup() {
 	two.Rotate(5*M_PI/4);
 	three = Entity(0, 1.0, 0.25, 0.25, false);
 	three.velocity = Vector4(0.1, -0.1, 0);
+	three.Rotate(1.0);
 }
 
 void RenderEntities() {
