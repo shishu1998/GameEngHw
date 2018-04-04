@@ -167,6 +167,5 @@ bool Entity::SATCollidesWith(Entity& Other) {
 		Other.Position.x -= (penetration.first * 0.5f);
 		Other.Position.y -= (penetration.second * 0.5f);
 	}
-	remakeMatrix();
 	return collided;
 }
