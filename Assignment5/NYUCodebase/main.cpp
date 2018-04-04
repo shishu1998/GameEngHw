@@ -84,6 +84,7 @@ void UpdateEntities(float elapsed) {
 		SetRandomVelocity(two);
 		SetRandomVelocity(three);
 	}
+	//Won't move since they're static, I put this here to test my static check in update
 	for (int i = 0; i < staticEntities.size(); ++i) {
 		staticEntities[i].Update(elapsed);
 	}
