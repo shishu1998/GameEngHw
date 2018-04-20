@@ -46,6 +46,8 @@ void init() {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
 	state.loadResources();
+
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 }
 
 void processGameState(GameState& state) {
@@ -75,6 +77,7 @@ int main(int argc, char *argv[])
 	init();
 	SDL_Event event;
 	bool done = false;
+	state.playBackgroundMusic();
 	while (!done) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		while (SDL_PollEvent(&event)) {
@@ -100,7 +103,6 @@ int main(int argc, char *argv[])
 		state.Render(program);
 		SDL_GL_SwapWindow(displayWindow);
 	}
-
 	SDL_Quit();
 	return 0;
 }

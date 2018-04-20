@@ -10,6 +10,13 @@ void GameState::loadResources() {
 		PlaceEntity(map.entities[i].type, map.entities[i].x * tileSize, map.entities[i].y * -tileSize);
 	}
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
+	bgm = Mix_LoadMUS("Running.mp3");
+}
+
+//Plays the background music
+void GameState::playBackgroundMusic() const{
+	Mix_VolumeMusic(20);
+	Mix_PlayMusic(bgm, -1);
 }
 
 //Updates the GameState based on the time elapsed
