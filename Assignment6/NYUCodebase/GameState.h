@@ -15,8 +15,9 @@ public:
 	Entity player;
 	Matrix viewMatrix;
 	Mix_Chunk *collide;
-	Mix_Chunk *scream;
+	Mix_Chunk *jump;
 	Mix_Music *bgm;
+	~GameState();
 	void loadResources();
 	void initEntities();
 	void reset();

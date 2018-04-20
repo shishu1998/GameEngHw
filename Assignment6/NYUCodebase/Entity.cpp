@@ -112,6 +112,11 @@ void Entity::CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapD
 	if (solids.find(mapData[gridY][gridRight]) != solids.end()) CollideRight(gridRight);
 }
 
+// Returns if Collision has occured
+bool Entity::hasCollided() const{
+	return collidedTop || collidedBottom || collidedLeft || collidedRight;
+}
+
 void Entity::remakeMatrix() {
 	matrix.Identity();
 	matrix.Translate(Position.x, Position.y, Position.z);

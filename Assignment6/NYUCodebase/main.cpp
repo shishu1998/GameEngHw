@@ -46,8 +46,8 @@ void init() {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
 	state.loadResources();
-
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+	state.bgm = Mix_LoadMUS("Running.mp3");
 }
 
 void processGameState(GameState& state) {

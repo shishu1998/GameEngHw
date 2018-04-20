@@ -10,7 +10,6 @@ void GameState::loadResources() {
 		PlaceEntity(map.entities[i].type, map.entities[i].x * tileSize, map.entities[i].y * -tileSize);
 	}
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
-	bgm = Mix_LoadMUS("Running.mp3");
 }
 
 //Plays the background music
@@ -67,4 +66,11 @@ void GameState::Render(ShaderProgram & program)
 	for (int i = 0; i < entities.size(); ++i) {
 		entities[i].Render(program, viewMatrix);
 	}
+}
+
+// Destructor for GameState
+GameState::~GameState() {
+	Mix_FreeChunk(collide);
+	Mix_FreeChunk(jump);
+	Mix_FreeMusic(bgm);
 }

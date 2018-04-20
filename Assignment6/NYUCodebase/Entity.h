@@ -22,6 +22,7 @@ public:
 	void CollideTop(int tileY);
 	void CollideBottom(int tileY);
 	void CollidesWithTile(const std::vector<std::vector<unsigned int>>& mapData, std::unordered_set<int> solids);
+	bool hasCollided() const;
 
 	void Update(float elapsed);
 	void Rotate(float angle);
