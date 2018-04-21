@@ -46,8 +46,6 @@ void init() {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
 	state.loadResources();
-	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
-	state.bgm = Mix_LoadMUS("Running.mp3");
 }
 
 void processGameState(GameState& state) {
@@ -60,7 +58,10 @@ void processGameState(GameState& state) {
 		state.player.forward = true;
 	}
 	if (keys[SDL_SCANCODE_SPACE]) {
-		if(state.player.collidedBottom)	state.player.velocity.y = 0.4;
+		if (state.player.collidedBottom) {
+			state.player.velocity.y = 0.4;
+			Mix_PlayChannel(-1, state.jump, 0);
+		}
 	}
 	if(!(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D] || keys[SDL_SCANCODE_SPACE])) {
 		state.player.acceleration.x = 0.0;

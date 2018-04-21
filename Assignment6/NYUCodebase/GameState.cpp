@@ -10,6 +10,10 @@ void GameState::loadResources() {
 		PlaceEntity(map.entities[i].type, map.entities[i].x * tileSize, map.entities[i].y * -tileSize);
 	}
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+	bgm = Mix_LoadMUS("Running.mp3");
+	ghost = Mix_LoadWAV("ghost.wav");
+	jump = Mix_LoadWAV("boing_spring.wav");
 }
 
 //Plays the background music
@@ -37,8 +41,10 @@ void GameState::updateGameState(float elapsed) {
 	player.CollidesWithTile(map.mapData, solidTiles);
 	//Player jumps when touches an enemy
 	for (int i = 0; i < entities.size(); ++i) {
-		if (player.SATCollidesWith(entities[i])) 
+		if (player.SATCollidesWith(entities[i])) {
 			player.velocity.y = 0.8;
+			Mix_PlayChannel(-1, ghost, 0);
+		}
 	}
 	//Translate the view matrix by the player's position
 	viewMatrix.Identity();
@@ -70,7 +76,7 @@ void GameState::Render(ShaderProgram & program)
 
 // Destructor for GameState
 GameState::~GameState() {
-	Mix_FreeChunk(collide);
+	Mix_FreeChunk(ghost);
 	Mix_FreeChunk(jump);
 	Mix_FreeMusic(bgm);
 }

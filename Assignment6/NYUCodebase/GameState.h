@@ -14,7 +14,7 @@ public:
 	std::unordered_set<int> solidTiles = std::unordered_set<int>(Solids);
 	Entity player;
 	Matrix viewMatrix;
-	Mix_Chunk *collide;
+	Mix_Chunk *ghost;
 	Mix_Chunk *jump;
 	Mix_Music *bgm;
 	~GameState();
