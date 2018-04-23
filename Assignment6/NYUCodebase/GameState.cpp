@@ -24,10 +24,9 @@ void GameState::playBackgroundMusic() const{
 
 //Updates the GameState based on the time elapsed
 void GameState::updateGameState(float elapsed) {
-	player.Update(elapsed);
+	player.Update(elapsed, map.mapData, solidTiles);
 	for (int i = 0; i < entities.size(); ++i) {
-		entities[i].Update(elapsed);
-		entities[i].CollidesWithTile(map.mapData, solidTiles);
+		entities[i].Update(elapsed, map.mapData, solidTiles);
 		//Reverses the movement of NPCs if there is collision against tiles
 		if (entities[i].collidedLeft) {
 			entities[i].acceleration.x = 0.3;
@@ -38,7 +37,6 @@ void GameState::updateGameState(float elapsed) {
 			entities[i].forward = true;
 		}
 	}
-	player.CollidesWithTile(map.mapData, solidTiles);
 	//Player jumps when touches an enemy
 	for (int i = 0; i < entities.size(); ++i) {
 		if (player.SATCollidesWith(entities[i])) {
