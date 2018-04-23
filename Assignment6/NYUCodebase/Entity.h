@@ -17,10 +17,10 @@ public:
 	void Render(ShaderProgram &Program, Matrix viewMatrix);
 	void ResetContactFlags();
 	bool CollidesWith(const Entity& Other);
-	void CollideLeft(int tileX);
-	void CollideRight(int tileX);
-	void CollideTop(int tileY);
-	void CollideBottom(int tileY);
+	void TileCollideLeft(int tileX);
+	void TileCollideRight(int tileX);
+	void TileCollideTop(int tileY);
+	void TileCollideBottom(int tileY);
 	bool hasCollided() const;
 
 	void Update(float elapsed, const std::vector<std::vector<unsigned int>>& mapData, std::unordered_set<int> solids);

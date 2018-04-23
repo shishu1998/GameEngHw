@@ -52,7 +52,7 @@ bool Entity::CollidesWith(const Entity& Other)
 }
 
 //Checks if the center of the left side is colliding with the tile to the left
-void Entity::CollideLeft(int tileX) {
+void Entity::TileCollideLeft(int tileX) {
 	float worldX = tileX * tileSize;
 	if (Position.x - size.x / 2 < worldX + tileSize) {
 		collidedLeft = true;
@@ -64,7 +64,7 @@ void Entity::CollideLeft(int tileX) {
 }
 
 //Checks if the center of the right side is colliding with the tile to the right
-void Entity::CollideRight(int tileX) {
+void Entity::TileCollideRight(int tileX) {
 	float worldX = tileX * tileSize;
 	if (Position.x + size.x / 2 > worldX) {
 		collidedRight = true;
@@ -76,7 +76,7 @@ void Entity::CollideRight(int tileX) {
 }
 
 //Checks if the center of the top side is colliding with the tile to the top
-void Entity::CollideTop(int tileY) {
+void Entity::TileCollideTop(int tileY) {
 	float worldY = tileY * -tileSize;
 	if (Position.y + size.y / 2 > worldY - tileSize) {
 		collidedTop = true;
@@ -88,7 +88,7 @@ void Entity::CollideTop(int tileY) {
 }
 
 //Checks if the center of the bottom side is colliding with the tile to the bottom
-void Entity::CollideBottom(int tileY) {
+void Entity::TileCollideBottom(int tileY) {
 	float worldY = tileY * -tileSize;
 	if (Position.y - size.y / 2 < worldY) {
 		collidedBottom = true;
@@ -111,7 +111,7 @@ void Entity::remakeMatrix() {
 	matrix.Scale(size.x, size.y, size.z);
 }
 
-//Updates the position of current entity
+//Updates the position of current entity and adjusts for collision
 void Entity::Update(float elapsed, const std::vector<std::vector<unsigned int>>& mapData, std::unordered_set<int> solids)
 {
 	ResetContactFlags();
@@ -128,13 +128,15 @@ void Entity::Update(float elapsed, const std::vector<std::vector<unsigned int>>&
 		float displacementX = velocity.x * elapsed;
 		float displacementY = velocity.y * elapsed;
 
+		// X TileCollision 
 		Position.x += displacementX;
-		if (solids.find(mapData[gridY][gridLeft]) != solids.end()) CollideLeft(gridLeft);
-		if (solids.find(mapData[gridY][gridRight]) != solids.end()) CollideRight(gridRight);
+		if (solids.find(mapData[gridY][gridLeft]) != solids.end()) TileCollideLeft(gridLeft);
+		if (solids.find(mapData[gridY][gridRight]) != solids.end()) TileCollideRight(gridRight);
 
+		// Y TileCollision
 		Position.y += displacementY;
-		if (solids.find(mapData[gridTop][gridX]) != solids.end()) CollideTop(gridTop);
-		if (solids.find(mapData[gridBottom][gridX]) != solids.end()) CollideBottom(gridBottom);
+		if (solids.find(mapData[gridTop][gridX]) != solids.end()) TileCollideTop(gridTop);
+		if (solids.find(mapData[gridBottom][gridX]) != solids.end()) TileCollideBottom(gridBottom);
 	}
 	remakeMatrix();
 }
