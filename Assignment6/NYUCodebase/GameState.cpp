@@ -77,4 +77,5 @@ GameState::~GameState() {
 	Mix_FreeChunk(ghost);
 	Mix_FreeChunk(jump);
 	Mix_FreeMusic(bgm);
+	Mix_CloseAudio();
 }
