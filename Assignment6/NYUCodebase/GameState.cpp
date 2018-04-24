@@ -9,6 +9,7 @@ void GameState::loadResources() {
 	for (int i = 0; i < map.entities.size(); i++) {
 		PlaceEntity(map.entities[i].type, map.entities[i].x * tileSize, map.entities[i].y * -tileSize);
 	}
+	start = player.Position;
 	viewMatrix.Translate(-player.Position.x, -player.Position.y, 0);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 	bgm = Mix_LoadMUS("Running.mp3");
@@ -37,10 +38,10 @@ void GameState::updateGameState(float elapsed) {
 			entities[i].forward = true;
 		}
 	}
-	//Player jumps when touches an enemy
+	//Player restarts when touches an enemy
 	for (int i = 0; i < entities.size(); ++i) {
 		if (player.SATCollidesWith(entities[i])) {
-			player.velocity.y = 0.8;
+			player.Position = start;
 			Mix_PlayChannel(-1, ghost, 0);
 		}
 	}

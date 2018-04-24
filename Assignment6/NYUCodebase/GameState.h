@@ -13,6 +13,7 @@ public:
 	std::vector<Entity> entities;
 	std::unordered_set<int> solidTiles = std::unordered_set<int>(Solids);
 	Entity player;
+	Vector4 start;
 	Matrix viewMatrix;
 	Mix_Chunk *ghost;
 	Mix_Chunk *jump;
